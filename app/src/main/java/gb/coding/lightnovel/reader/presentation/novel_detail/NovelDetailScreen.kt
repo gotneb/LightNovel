@@ -2,6 +2,7 @@ package gb.coding.lightnovel.reader.presentation.novel_detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.R
+import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.domain.models.Novel
 import gb.coding.lightnovel.reader.presentation.novel_detail.components.ExpandableText
@@ -49,6 +51,7 @@ import gb.coding.lightnovel.ui.theme.LightNovelTheme
 @Composable
 fun NovelDetailScreen(
     novel: Novel,
+    onAction: (NovelDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val infoShadow = Shadow(
@@ -216,7 +219,11 @@ fun NovelDetailScreen(
             }
         }
         items(10) { index ->
-            Column(Modifier.padding(horizontal = 16.dp)) {
+            Column(
+                Modifier
+                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(MockChapters.sample)) }
+                    .padding(horizontal = 16.dp)
+            ) {
                 Text(
                     text = "Capítulo ${index + 1}: Saindo de Casa",
                     fontSize = 16.sp,
@@ -240,6 +247,7 @@ private fun NovelDetailScreenPreview() {
     LightNovelTheme {
         NovelDetailScreen(
             novel = MockNovels.novel,
+            onAction = {},
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
