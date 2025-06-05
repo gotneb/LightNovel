@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.LightNovel" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.LightNovel" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- This only works in API 31+ -->
+        <!-- To use it in API 29 or less, a custom theme workaround should be made -->
+        <item name="android:windowSplashScreenBackground">@color/md_theme_light_primary</item>
+    </style>
 </resources>

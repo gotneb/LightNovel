@@ -11,7 +11,9 @@ android {
 
     defaultConfig {
         applicationId = "gb.coding.lightnovel"
-        minSdk = 29
+        // FIX: minSdk should be set to API 29.
+        // For this MVP, we'll use 31, since it's too much workaround for now.
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
