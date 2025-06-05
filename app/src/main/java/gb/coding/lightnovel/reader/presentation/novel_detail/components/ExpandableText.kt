@@ -40,7 +40,7 @@ fun ExpandableText(
         )
         Text(
             text = if (expanded) "Mostrar menos" else "Ler mais",
-            color = Color.Blue,
+            color = Color(0xFF65558F),
             fontSize = 14.sp,
             modifier = Modifier.padding(top = 4.dp)
         )

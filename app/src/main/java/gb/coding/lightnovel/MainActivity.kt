@@ -111,7 +111,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<Route.Browse> {
-                            BrowseScreen(Modifier.padding(innerPadding))
+                            BrowseScreen(
+                                onAction = {
+                                    navController.navigate(Route.NovelDetail)
+                                },
+                                modifier = Modifier.padding(innerPadding),
+                            )
                         }
                         composable<Route.NovelDetail> {
                             NovelDetailScreen(
