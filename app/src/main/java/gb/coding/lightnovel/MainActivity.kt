@@ -40,6 +40,7 @@ import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
+import gb.coding.lightnovel.reader.presentation.library.LibraryState
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailScreen
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
@@ -103,11 +104,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable<Route.Library> {
                             LibraryScreen(
-                                novels = emptyList(),
+                                state = LibraryState(),
                                 onAction = {
                                     navController.navigate(Route.NovelDetail)
                                 },
-                                modifier = Modifier.padding(innerPadding)
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(innerPadding)
                             )
                         }
                         composable<Route.Browse> {
