@@ -38,6 +38,7 @@ import gb.coding.lightnovel.core.navigation.components.BottomNavigationBar
 import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
+import gb.coding.lightnovel.reader.presentation.browse.BrowseState
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryState
@@ -115,6 +116,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<Route.Browse> {
                             BrowseScreen(
+                                state = BrowseState(),
                                 onAction = {
                                     navController.navigate(Route.NovelDetail)
                                 },
