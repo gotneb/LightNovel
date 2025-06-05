@@ -91,7 +91,7 @@ fun NovelBrowseCard(
 private fun NovelBrowseCardPreview() {
     LightNovelTheme {
         NovelBrowseCard(
-            novel = MockNovels.novel,
+            novel = MockNovels.sample,
             onClick = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )

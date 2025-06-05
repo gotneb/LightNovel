@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -246,7 +245,7 @@ fun NovelDetailScreen(
 private fun NovelDetailScreenPreview() {
     LightNovelTheme {
         NovelDetailScreen(
-            novel = MockNovels.novel,
+            novel = MockNovels.sample,
             onAction = {},
             modifier = Modifier
                 .fillMaxSize()

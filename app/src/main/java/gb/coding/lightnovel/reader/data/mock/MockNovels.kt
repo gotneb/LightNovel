@@ -3,7 +3,7 @@ package gb.coding.lightnovel.reader.data.mock
 import gb.coding.lightnovel.reader.domain.models.Novel
 
 object MockNovels {
-    val novel = Novel(
+    val sample = Novel(
         id = "1",
         title = "Renegade Immortal",
         author = "Wang Er",

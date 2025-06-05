@@ -50,7 +50,7 @@ fun LibraryNovelCard(
 private fun LibraryNovelCardPreview() {
     LightNovelTheme {
         LibraryNovelCard(
-            novel = MockNovels.novel,
+            novel = MockNovels.sample,
             onClick = {},
         )
     }
