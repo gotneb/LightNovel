@@ -63,7 +63,8 @@ fun LibraryScreen(
                 onTextChange = { searchText = it },
                 modifier = Modifier
                     .padding(vertical = 12.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                placeholder = { Text("Pesquisar na biblioteca...") },
             )
         }
         items(10) {

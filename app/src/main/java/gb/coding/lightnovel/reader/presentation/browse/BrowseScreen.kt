@@ -36,12 +36,14 @@ fun BrowseScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
     ) {
         item {
             SearchBar(
                 text = searchText,
                 onTextChange = { searchText = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text(text = "Buscar novels...") },
             )
         }
         item {

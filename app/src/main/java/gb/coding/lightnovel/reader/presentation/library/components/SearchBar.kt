@@ -23,13 +23,14 @@ import gb.coding.lightnovel.ui.theme.LightNovelTheme
 fun SearchBar(
     text: String,
     onTextChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: @Composable (() -> Unit)? = null,
 ) {
     TextField(
         value = text,
         onValueChange = onTextChange,
         singleLine = true,
-        placeholder = { Text("Pesquisar na biblioteca...") },
+        placeholder = placeholder,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -52,9 +53,7 @@ fun SearchBar(
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
         ),
-        modifier = Modifier
-            .padding(vertical = 12.dp)
-            .fillMaxWidth()
+        modifier = modifier
     )
 }
 
