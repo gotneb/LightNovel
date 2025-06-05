@@ -74,21 +74,26 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        BottomNavigationBar(
-                            items = bottomNavItems,
-                            selectedNavigationIndex = selectedNavigationIndex,
-                            onItemSelected = { index ->
-                                selectedNavigationIndex = index
-                                val route = bottomNavItems[index].route
-                                navController.navigate(route) {
-                                    popUpTo(route) {
-                                        inclusive = true
-                                        saveState = true
+                        // Only show bottom bar at "Library" or "Browse" screens
+                        if (currentDestination == Route.Library::class.qualifiedName ||
+                            currentDestination == Route.Browse::class.qualifiedName
+                        ) {
+                            BottomNavigationBar(
+                                items = bottomNavItems,
+                                selectedNavigationIndex = selectedNavigationIndex,
+                                onItemSelected = { index ->
+                                    selectedNavigationIndex = index
+                                    val route = bottomNavItems[index].route
+                                    navController.navigate(route) {
+                                        popUpTo(route) {
+                                            inclusive = true
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
                                     }
-                                    launchSingleTop = true
-                                }
-                            },
-                        )
+                                },
+                            )
+                        }
                     },
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
@@ -97,7 +102,13 @@ class MainActivity : ComponentActivity() {
                         startDestination = Route.Library,
                     ) {
                         composable<Route.Library> {
-                            LibraryScreen(Modifier.padding(innerPadding))
+                            LibraryScreen(
+                                novels = emptyList(),
+                                onAction = {
+                                    navController.navigate(Route.NovelDetail)
+                                },
+                                modifier = Modifier.padding(innerPadding)
+                            )
                         }
                         composable<Route.Browse> {
                             BrowseScreen(Modifier.padding(innerPadding))
