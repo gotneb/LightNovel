@@ -24,7 +24,12 @@ class BrowseViewModel(
 
     fun onAction(action: BrowseAction) {
         when (action) {
-            is BrowseAction.OnNovelClick -> TODO()
+            is BrowseAction.OnNovelClick -> {
+                viewModelScope.launch {
+                    println("BrowseViewModel | onAction | OnNovelClick | Novel id: ${action.id}")
+                    _events.send(BrowseEvent.Navigate2NovelDetail(action.id))
+                }
+            }
 
             is BrowseAction.OnQueryChange -> {
                 _state.update { it.copy(searchText = action.query) }
@@ -37,7 +42,9 @@ class BrowseViewModel(
                     novelRepository
                         .searchNovels(_state.value.searchText)
                         .onSuccess { novels ->
-                            println("BrowseViewModel | onAction | searchNovels: $novels")
+                            novels.forEach { novel ->
+                                println("BrowseViewModel | onAction | searchNovels | id: \"${novel.id}\" | Title: \"${novel.title}\"")
+                            }
                             _state.update { it.copy(isLoading = false, searchResults = novels) }
                         }
                         .onError {

@@ -86,7 +86,7 @@ fun BrowseScreen(
             items(state.searchResults) { novel ->
                 NovelBrowseCard(
                     novel = novel,
-                    onClick = { onAction(BrowseAction.OnNovelClick(it)) },
+                    onClick = { onAction(BrowseAction.OnNovelClick(novel.id)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
