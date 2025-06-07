@@ -1,9 +1,22 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
+
+val localProperties = Properties().apply {
+    load(FileInputStream(File("local.properties")))
+}
+
+/*
+ * FIX: The keys can be reverse engineered, but for now this is a good approach.
+ */
+val SUPABASE_URL = localProperties["SUPABASE_URL"] as String
+val SUPABASE_ANON_KEY = localProperties["SUPABASE_ANON_KEY"] as String
 
 android {
     namespace = "gb.coding.lightnovel"
@@ -22,12 +35,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
+            buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
+            buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
         }
     }
     compileOptions {
@@ -38,13 +58,21 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
 
 dependencies {
 
-    implementation(libs.bundles.compose)
+    with (libs) {
+        implementation(platform(bom))
+        implementation(bundles.supabase)
+
+        implementation(bundles.compose)
+        implementation(bundles.ktor)
+        implementation(bundles.koin)
+    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
