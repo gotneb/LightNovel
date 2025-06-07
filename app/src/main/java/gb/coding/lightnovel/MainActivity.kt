@@ -22,7 +22,6 @@ import gb.coding.lightnovel.core.navigation.Route
 import gb.coding.lightnovel.core.navigation.bottomNavItems
 import gb.coding.lightnovel.core.navigation.components.BottomNavigationBar
 import gb.coding.lightnovel.reader.data.mock.MockChapters
-import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
 import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
@@ -70,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     browseViewModel.events.collect { event ->
                         when (event) {
                             is BrowseEvent.Navigate2NovelDetail -> {
-                                navController.navigate(Route.NovelDetail(event.id))
+                                navController.navigate(Route.NovelDetail(event.novelId))
                             }
                         }
                     }
