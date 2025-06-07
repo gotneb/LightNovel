@@ -66,7 +66,7 @@ android {
 dependencies {
 
     with (libs) {
-        implementation(platform(bom))
+        implementation(platform(supabase.bom))
         implementation(bundles.supabase)
 
         implementation(bundles.compose)

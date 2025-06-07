@@ -23,7 +23,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
 
 # Supabase
-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 
 # Ktor
