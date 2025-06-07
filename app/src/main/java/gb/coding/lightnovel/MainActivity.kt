@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,14 +22,16 @@ import gb.coding.lightnovel.core.navigation.Route
 import gb.coding.lightnovel.core.navigation.bottomNavItems
 import gb.coding.lightnovel.core.navigation.components.BottomNavigationBar
 import gb.coding.lightnovel.reader.data.mock.MockChapters
-import gb.coding.lightnovel.reader.data.mock.MockNovels
+import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
-import gb.coding.lightnovel.reader.presentation.browse.BrowseState
+import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryState
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailScreen
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailViewModel
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +59,19 @@ class MainActivity : ComponentActivity() {
                     }
                     if (currentIndex >= 0) {
                         selectedNavigationIndex = currentIndex
+                    }
+                }
+
+                val browseViewModel = koinViewModel<BrowseViewModel>()
+                val browseState by browseViewModel.state.collectAsStateWithLifecycle()
+
+                LaunchedEffect(Unit) {
+                    browseViewModel.events.collect { event ->
+                        when (event) {
+                            is BrowseEvent.Navigate2NovelDetail -> {
+                                navController.navigate(Route.NovelDetail(event.novelId))
+                            }
+                        }
                     }
                 }
 
@@ -99,24 +115,28 @@ class MainActivity : ComponentActivity() {
                                     .padding(innerPadding)
                             )
                         }
+
                         composable<Route.Browse> {
                             BrowseScreen(
-                                state = BrowseState(),
-                                onAction = {
-                                    navController.navigate(Route.NovelDetail)
-                                },
+                                state = browseState,
+                                onAction = browseViewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }
+
                         composable<Route.NovelDetail> {
+                            val viewModel = koinViewModel<NovelDetailViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+
                             NovelDetailScreen(
-                                novel = MockNovels.sample,
+                                state = state,
                                 onAction = { chapter ->
                                     navController.navigate(Route.ChapterReader)
                                 },
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }
+
                         composable<Route.ChapterReader> {
                             ChapterReaderScreen(
                                 chapter = MockChapters.sample,
