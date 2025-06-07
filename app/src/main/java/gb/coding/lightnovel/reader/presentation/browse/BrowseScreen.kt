@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,10 +22,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,7 +46,6 @@ fun BrowseScreen(
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
-    var searchText by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -54,14 +57,16 @@ fun BrowseScreen(
             .fillMaxSize()
             .padding(12.dp)
     ) {
+        // Search Bar
         item {
             SearchBar(
-                text = searchText,
-                onTextChange = { searchText = it },
+                text = state.searchText,
+                onTextChange = { onAction(BrowseAction.OnQueryChange(it)) },
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .fillMaxWidth(),
                 placeholder = { Text(text = "Buscar novels...") },
+                onSearch = { onAction(BrowseAction.OnSearchClick) }
             )
         }
 
@@ -69,7 +74,10 @@ fun BrowseScreen(
         if (state.searchResults.isNotEmpty()) {
             item {
                 Text(
-                    text = "Encontrados 4 resultados...",
+                    text = when (state.searchResults.size) {
+                        1 -> "1 resultado encontrado"
+                        else -> "${state.searchResults.size} resultados encontrados"
+                    },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                 )
@@ -81,6 +89,24 @@ fun BrowseScreen(
                     onClick = { onAction(BrowseAction.OnNovelClick(it)) },
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        }
+
+        // Loading
+        if (state.isLoading) {
+            item {
+                val configuration = LocalConfiguration.current
+                val heightScreen = configuration.screenHeightDp
+                val columnHeight = (0.8f * heightScreen).dp
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .height(columnHeight),
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
 
@@ -155,7 +181,7 @@ fun BrowseScreen(
 private fun BrowseScreenPreview() {
     LightNovelTheme {
         BrowseScreen(
-            state = BrowseState(),
+            state = BrowseState(isLoading = true),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )

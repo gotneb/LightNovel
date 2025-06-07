@@ -70,6 +70,7 @@ fun LibraryScreen(
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
                     placeholder = { Text("Pesquisar na biblioteca...") },
+                    onSearch = TODO()
                 )
             }
 
