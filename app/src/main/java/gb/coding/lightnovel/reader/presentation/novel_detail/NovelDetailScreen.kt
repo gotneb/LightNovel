@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,7 +50,7 @@ import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
 fun NovelDetailScreen(
-    novel: Novel,
+    state: NovelDetailState,
     onAction: (NovelDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -61,160 +62,171 @@ fun NovelDetailScreen(
 
     LazyColumn(modifier) {
         item {
-            Column(Modifier.fillMaxWidth()) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                ) {
-                    // Background image
-                    Image(
-                        painter = painterResource(id = R.drawable.image_placeholder),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .matchParentSize()
-                            .blur(8.dp)
-                            .padding(bottom = 16.dp)
-                    )
-                    // Gradient overlay
-                    Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Black.copy(alpha = 0.5f),
-                                        Color.Transparent
-                                    ),
-                                )
-                            )
-                    )
-                    // Content
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .matchParentSize()
+            when {
+                state.isLoading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.image_placeholder),
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .clip(RoundedCornerShape(8.dp))
-                                .shadow(
-                                    elevation = 8.dp,
-                                    shape = RoundedCornerShape(8.dp),
-                                    clip = true,
-                                )
-                        )
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier
-                                .padding(vertical = 16.dp)
-                                .fillMaxHeight()
+                        CircularProgressIndicator()
+                    }
+                }
+                state.novel != null -> {
+                    Column(Modifier.fillMaxWidth()) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
                         ) {
-                            Text(
-                                text = novel.title,
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                style = TextStyle(
-                                    shadow = infoShadow,
-                                ),
+                            // Background image
+                            Image(
+                                painter = painterResource(id = R.drawable.image_placeholder),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .blur(8.dp)
+                                    .padding(bottom = 16.dp)
                             )
+                            // Gradient overlay
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .background(
+                                        Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Black.copy(alpha = 0.5f),
+                                                Color.Transparent
+                                            ),
+                                        )
+                                    )
+                            )
+                            // Content
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(vertical = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .matchParentSize()
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.image_placeholder),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .shadow(
+                                            elevation = 8.dp,
+                                            shape = RoundedCornerShape(8.dp),
+                                            clip = true,
+                                        )
+                                )
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .fillMaxHeight()
+                                ) {
+                                    Text(
+                                        text = state.novel.title,
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        style = TextStyle(
+                                            shadow = infoShadow,
+                                        ),
+                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(vertical = 4.dp),
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.person),
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier
+                                                .padding(end = 4.dp)
+                                                .size(20.dp)
+                                        )
+                                        Text(
+                                            text = state.novel.author,
+                                            fontSize = 16.sp,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Medium,
+                                            style = TextStyle(
+                                                shadow = infoShadow,
+                                            ),
+                                        )
+                                    }
+                                    Row(verticalAlignment = Alignment.CenterVertically,) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.hourglass),
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier
+                                                .padding(end = 4.dp)
+                                                .size(20.dp)
+                                        )
+                                        Text(
+                                            text = state.novel.status,
+                                            fontSize = 16.sp,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Medium,
+                                            style = TextStyle(
+                                                shadow = infoShadow,
+                                            ),
+                                        )
+                                    }
+
+                                }
+                            }
+                        }
+                        Text(
+                            text = "Sinopse",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        ExpandableText(
+                            content = state.novel.description,
+                            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier
+                                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState())
+                        ) {
+                            state.novel.tags.forEach { tag ->
+                                TagChip(text = tag)
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "2137 capítulos",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                            )
+                            IconButton(
+                                onClick = { /* TODO */ },
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.person),
+                                    painter = painterResource(id = R.drawable.filter_list),
+                                    tint = Color.Black,
                                     contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier
-                                        .padding(end = 4.dp)
-                                        .size(20.dp)
-                                )
-                                Text(
-                                    text = novel.author,
-                                    fontSize = 16.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Medium,
-                                    style = TextStyle(
-                                        shadow = infoShadow,
-                                    ),
                                 )
                             }
-                            Row(verticalAlignment = Alignment.CenterVertically,) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.hourglass),
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier
-                                        .padding(end = 4.dp)
-                                        .size(20.dp)
-                                )
-                                Text(
-                                    text = novel.status,
-                                    fontSize = 16.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Medium,
-                                    style = TextStyle(
-                                        shadow = infoShadow,
-                                    ),
-                                )
-                            }
-
                         }
+                        HorizontalDivider(Modifier.padding(horizontal = 16.dp))
                     }
                 }
-                Text(
-                    text = "Sinopse",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                ExpandableText(
-                    content = novel.description,
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                ) {
-                    novel.tags.forEach { tag ->
-                        TagChip(text = tag)
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = "2137 capítulos",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
-                    IconButton(
-                        onClick = { /* TODO */ },
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.filter_list),
-                            tint = Color.Black,
-                            contentDescription = null,
-                        )
-                    }
-                }
-                HorizontalDivider(Modifier.padding(horizontal = 16.dp))
             }
         }
         items(10) { index ->
@@ -245,7 +257,7 @@ fun NovelDetailScreen(
 private fun NovelDetailScreenPreview() {
     LightNovelTheme {
         NovelDetailScreen(
-            novel = MockNovels.sample,
+            state = NovelDetailState(),
             onAction = {},
             modifier = Modifier
                 .fillMaxSize()
