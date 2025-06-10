@@ -70,6 +70,7 @@ dependencies {
         implementation(bundles.supabase)
 
         implementation(bundles.compose)
+        implementation(bundles.coil)
         implementation(bundles.ktor)
         implementation(bundles.koin)
     }

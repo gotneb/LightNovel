@@ -20,26 +20,64 @@ class NovelDetailViewModel(
     val state = _state.asStateFlow()
 
     init {
+        // TODO: Set novelId in its own state, so it's get easy to call helper functions
         val novelId = savedStateHandle.get<String>("novelId")
         println("NovelDetailViewModel | init | novelId: $novelId")
 
         getNovel(novelId!!)
     }
 
+    fun onAction(action: NovelDetailAction) {
+        when (action) {
+            is NovelDetailAction.OnChapterClicked -> {
+                println("NovelDetailViewModel | onAction | OnChapterClicked")
+                TODO()
+            }
+            NovelDetailAction.OnInvertChaptersListClicked -> {
+                println("NovelDetailViewModel | onAction | OnInvertChaptersListClicked")
+                _state.update { it.copy(
+                    chapters = it.chapters.reversed(),
+                    invertList = !it.invertList
+                ) }
+            }
+        }
+    }
+
     fun getNovel(id: String) {
         println("NovelDetailViewModel | getNovel | id: $id")
+        _state.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
             novelRepository
                 .getNovelById(id)
                 .onSuccess { novel ->
                     println("NovelDetailViewModel | getNovel | Success")
-                    _state.update { it.copy(isLoading = false, novel = novel) }
+                    _state.update { it.copy(novel = novel) }
+
+                    getNovelChapters(id)
                 }
                 .onError { error ->
                     println("NovelDetailViewModel | getNovel | Error: $error")
                     _state.update { it.copy(isLoading = false) }
                 }
+        }
+    }
+
+    fun getNovelChapters(id: String) {
+        println("NovelDetailViewModel | getNovelChapters | Novel id: \"$id\"")
+        _state.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            novelRepository
+                .getChaptersByNovelId(id)
+                .onSuccess { chapters ->
+                    println("NovelDetailViewModel | getNovelChapters | Success")
+                    _state.update { it.copy(isLoading = false, chapters = chapters) }
+                }
+                .onError { error ->
+                    println("NovelDetailViewModel | getNovelChapters | Error: $error")
+                    _state.update { it.copy(isLoading = false) }
+                }
+
         }
     }
 }

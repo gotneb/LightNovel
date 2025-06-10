@@ -46,17 +46,19 @@ fun ChapterReaderScreen(
                 .verticalScroll(scrollState)
                 .padding(16.dp),
         ) {
-            Text(
-                text = chapter.part,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                letterSpacing = 1.4.sp,
-                fontFamily = SourceSerif4,
-                modifier = Modifier
-                    .padding(top = 56.dp)
-                    .fillMaxWidth(),
-            )
+            chapter.part?.let { part ->
+                Text(
+                    text = part,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    letterSpacing = 1.4.sp,
+                    fontFamily = SourceSerif4,
+                    modifier = Modifier
+                        .padding(top = 56.dp)
+                        .fillMaxWidth(),
+                )
+            }
             Text(
                 text = "Capítulo ${chapter.chapterNumber}:\n${chapter.title}",
                 color = MaterialTheme.colorScheme.onBackground,

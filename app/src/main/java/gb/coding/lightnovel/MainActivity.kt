@@ -130,9 +130,7 @@ class MainActivity : ComponentActivity() {
 
                             NovelDetailScreen(
                                 state = state,
-                                onAction = { chapter ->
-                                    navController.navigate(Route.ChapterReader)
-                                },
+                                onAction = viewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }
