@@ -247,7 +247,7 @@ fun NovelDetailScreen(
         ) { chapter ->
             Column(
                 Modifier
-                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(MockChapters.sample.id)) }
+                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(chapter.id)) }
                     .padding(horizontal = 16.dp)
             ) {
                 Text(

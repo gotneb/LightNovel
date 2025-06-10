@@ -13,5 +13,5 @@ sealed class Route() {
     data class NovelDetail(val novelId: String) : Route()
 
     @Serializable
-    data object ChapterReader : Route()
+    data class ChapterReader(val chapterId: String) : Route()
 }
