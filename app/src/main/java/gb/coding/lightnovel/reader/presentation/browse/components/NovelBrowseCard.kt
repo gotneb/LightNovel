@@ -18,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import gb.coding.lightnovel.R
 import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.domain.models.Novel
@@ -40,9 +42,8 @@ fun NovelBrowseCard(
             .fillMaxWidth()
             .clickable{ onClick(novel) }
     ) {
-        Image(
-            // TODO: replace with novel image
-            painter = painterResource(R.drawable.image_placeholder),
+        AsyncImage(
+            model = if (LocalInspectionMode.current) R.drawable.image_placeholder else novel.coverImage,
             contentDescription = null,
             modifier = Modifier
                 .padding(end = 8.dp)
