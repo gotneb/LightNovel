@@ -13,5 +13,4 @@ data class Novel(
     val status: String,
     val description: String,
     val tags: List<String> = emptyList(),
-    val chapters: List<Chapter> = emptyList()
 )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 import gb.coding.lightnovel.ui.theme.SourceSerif4
 
@@ -36,6 +38,7 @@ fun ChapterReaderScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
         ) {
             CircularProgressIndicator(
                 color = Color(0xFF66558E)
@@ -108,7 +111,10 @@ fun ChapterReaderScreen(
 private fun ChapterReaderScreenPreview() {
     LightNovelTheme {
         ChapterReaderScreen(
-            state = ChapterReaderState(),
+            state = ChapterReaderState(
+                isLoading = false,
+                chapter = MockChapters.sample,
+            ),
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
         )
