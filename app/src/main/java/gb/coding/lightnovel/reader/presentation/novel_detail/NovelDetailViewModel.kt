@@ -6,18 +6,24 @@ import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
+import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NovelDetailViewModel(
     private val novelRepository: NovelRepository,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NovelDetailState())
     val state = _state.asStateFlow()
+
+    private val _events = Channel<NovelDetailEvent>()
+    val events = _events.receiveAsFlow()
 
     init {
         // TODO: Set novelId in its own state, so it's get easy to call helper functions
@@ -31,8 +37,11 @@ class NovelDetailViewModel(
         when (action) {
             is NovelDetailAction.OnChapterClicked -> {
                 println("NovelDetailViewModel | onAction | OnChapterClicked")
-                TODO()
+                viewModelScope.launch {
+                    _events.send(NovelDetailEvent.Navigate2ChapterReader(action.chapterId))
+                }
             }
+
             NovelDetailAction.OnInvertChaptersListClicked -> {
                 println("NovelDetailViewModel | onAction | OnInvertChaptersListClicked")
                 _state.update { it.copy(

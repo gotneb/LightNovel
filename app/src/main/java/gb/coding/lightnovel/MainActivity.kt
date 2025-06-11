@@ -26,8 +26,10 @@ import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
 import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
+import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryState
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailScreen
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailViewModel
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
@@ -125,6 +127,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<Route.NovelDetail> {
+                            println("NovelDetailScreen | Composable")
                             val viewModel = koinViewModel<NovelDetailViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -133,11 +136,25 @@ class MainActivity : ComponentActivity() {
                                 onAction = viewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
+
+                            LaunchedEffect(Unit) {
+                                viewModel.events.collect { event ->
+                                    println("NovelDetailScreen | LaunchedEffect | event: $event")
+                                    when (event) {
+                                        is NovelDetailEvent.Navigate2ChapterReader -> {
+                                            navController.navigate(Route.ChapterReader(event.chapterId))
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         composable<Route.ChapterReader> {
+                            val viewModel = koinViewModel<ChapterReaderViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+
                             ChapterReaderScreen(
-                                chapter = MockChapters.sample,
+                                state = state,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }

@@ -29,7 +29,17 @@ class NovelRepositoryImpl(
     }
 
     override suspend fun getChapterById(id: String): Result<Chapter, Error> {
-        TODO("Not yet implemented")
+        println("NovelRepositoryImpl | getChapterById | id: \"$id\"")
+        val chapter = supabase
+            .from("chapter")
+            .select() {
+                filter {
+                    eq("id", id)
+                }
+            }
+            .decodeSingle<Chapter>()
+
+        return Result.Success(chapter)
     }
 
     /// Returns a list of all chapters for a given novel id without their content

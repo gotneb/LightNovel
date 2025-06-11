@@ -2,9 +2,20 @@ package gb.coding.lightnovel.reader.data.mock
 
 import gb.coding.lightnovel.reader.domain.models.Chapter
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 
 object MockChapters {
     val mockDate: Instant = Instant.parse("2023-08-20T00:00:00Z")
+
+    val samples = List(7) { index ->
+        Chapter(
+            id = "$index",
+            part = "Livro 4",
+            title = "O Despertar $index",
+            chapterNumber = "${index + 1}",
+            createdAt = mockDate,
+        )
+    }
 
     val sample = Chapter(
         id = "1",

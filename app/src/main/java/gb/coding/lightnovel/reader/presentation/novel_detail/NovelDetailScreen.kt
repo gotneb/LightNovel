@@ -1,7 +1,6 @@
 package gb.coding.lightnovel.reader.presentation.novel_detail
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -38,6 +37,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +48,7 @@ import coil3.compose.AsyncImage
 import gb.coding.lightnovel.R
 import gb.coding.lightnovel.core.presentation.util.formatDate
 import gb.coding.lightnovel.reader.data.mock.MockChapters
+import gb.coding.lightnovel.reader.data.mock.MockNovels
 import gb.coding.lightnovel.reader.presentation.novel_detail.components.ExpandableText
 import gb.coding.lightnovel.reader.presentation.novel_detail.components.TagChip
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
@@ -87,7 +88,7 @@ fun NovelDetailScreen(
                 ) {
                     // Background image
                     AsyncImage(
-                        model = state.novel!!.coverImage,
+                        model = if (LocalInspectionMode.current) R.drawable.image_placeholder else state.novel!!.coverImage,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -117,7 +118,7 @@ fun NovelDetailScreen(
                             .matchParentSize()
                     ) {
                         AsyncImage(
-                            model = state.novel.coverImage,
+                            model = if (LocalInspectionMode.current) R.drawable.image_placeholder else state.novel!!.coverImage,
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
@@ -136,7 +137,7 @@ fun NovelDetailScreen(
                                 .fillMaxHeight()
                         ) {
                             Text(
-                                text = state.novel.title,
+                                text = state.novel!!.title,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -247,7 +248,7 @@ fun NovelDetailScreen(
         ) { chapter ->
             Column(
                 Modifier
-                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(MockChapters.sample.id)) }
+                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(chapter.id)) }
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
@@ -272,7 +273,11 @@ fun NovelDetailScreen(
 private fun NovelDetailScreenPreview() {
     LightNovelTheme {
         NovelDetailScreen(
-            state = NovelDetailState(isLoading = true),
+            state = NovelDetailState(
+                novel = MockNovels.sample,
+                chapters = MockChapters.samples,
+                isLoading = false,
+            ),
             onAction = {},
             modifier = Modifier
                 .fillMaxSize()
