@@ -155,6 +155,7 @@ class MainActivity : ComponentActivity() {
 
                             ChapterReaderScreen(
                                 state = state,
+                                onAction = viewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }

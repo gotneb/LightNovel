@@ -1,9 +1,7 @@
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
@@ -33,6 +31,21 @@ class ChapterReaderViewModel(
                     println("ChapterReaderViewModel | Error getting chapter \"$chapterId\"\nError: $error")
                     _state.value = _state.value.copy(isLoading = false)
                 }
+        }
+    }
+
+    fun onAction(action: ChapterReaderAction) {
+        when (action) {
+            ChapterReaderAction.OnScreenClicked -> {
+                println("ChapterReaderViewModel | OnScreenTap")
+                _state.value = _state.value.copy(isOverlayVisible = !_state.value.isOverlayVisible)
+            }
+
+            ChapterReaderAction.OnNextChapterClicked -> TODO()
+            ChapterReaderAction.OnPrevChapterClicked -> TODO()
+            ChapterReaderAction.OnReturnClicked -> TODO()
+            ChapterReaderAction.OnSettingsClicked -> TODO()
+            ChapterReaderAction.OnChaptersListClicked -> TODO()
         }
     }
 }
