@@ -154,6 +154,7 @@ fun ChapterReaderScreen(
                 .align(Alignment.BottomCenter),
         ) {
             ReaderBottomBar(
+                state = state,
                 onAction = onAction,
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)

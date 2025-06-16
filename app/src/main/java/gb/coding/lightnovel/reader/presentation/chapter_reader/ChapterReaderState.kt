@@ -6,5 +6,13 @@ data class ChapterReaderState(
     val chapter: Chapter? = null,
     val isLoading: Boolean = true,
     val isOverlayVisible: Boolean = false,
-    // val error: String? = null
-)
+
+    val chapterList: List<Chapter> = emptyList(),
+    val currentChapterIndex: Int = -1,
+) {
+    val isFirstChapter: Boolean
+        get() = currentChapterIndex == 0
+
+    val isLastChapter: Boolean
+        get() = currentChapterIndex == chapterList.lastIndex
+}

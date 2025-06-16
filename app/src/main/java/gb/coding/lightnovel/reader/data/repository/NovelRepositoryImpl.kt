@@ -49,7 +49,7 @@ class NovelRepositoryImpl(
             .from("chapter")
             // Fetching content will be too much overhead when loading the chapter list
             // Much data which isn't even going to be read
-            .select(columns = Columns.list("id", "part", "title", "chapter_number", "created_at")) {
+            .select(columns = Columns.list("id", "novel_id", "part", "title", "chapter_number", "created_at")) {
                 filter {
                     eq("novel_id", id)
                 }

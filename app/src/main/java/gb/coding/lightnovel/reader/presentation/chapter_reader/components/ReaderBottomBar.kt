@@ -16,11 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import gb.coding.lightnovel.R
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderAction
+import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderState
 
 @Composable
 fun ReaderBottomBar(
+    state: ChapterReaderState,
     onAction: (ChapterReaderAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         HorizontalDivider(thickness = 1.dp)
@@ -32,7 +34,8 @@ fun ReaderBottomBar(
                 .background(MaterialTheme.colorScheme.background)
         ) {
             IconButton(
-                onClick = { onAction(ChapterReaderAction.OnPrevChapterClicked) }
+                onClick = { onAction(ChapterReaderAction.OnPrevChapterClicked) },
+                enabled = !state.isFirstChapter
             ) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_back),
@@ -48,7 +51,8 @@ fun ReaderBottomBar(
                 )
             }
             IconButton(
-                onClick = { onAction(ChapterReaderAction.OnNextChapterClicked) }
+                onClick = { onAction(ChapterReaderAction.OnNextChapterClicked) },
+                enabled = !state.isLastChapter
             ) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_forward),

@@ -19,13 +19,31 @@ class ChapterReaderViewModel(
     val state = _state.asStateFlow()
 
     init {
-        val chapterId: String = checkNotNull(savedStateHandle["chapterId"])
+        val chapterId: String = checkNotNull(savedStateHandle["chapterId"]) {
+            println("ChapterReaderViewModel | init | Error getting chapterId from savedStateHandle")
+        }
+
         viewModelScope.launch {
             novelRepository
                 .getChapterById(chapterId)
                 .onSuccess { chapter ->
                     println("ChapterReaderViewModel | Success getting chapter \"$chapterId\"")
-                    _state.value = _state.value.copy(chapter = chapter, isLoading = false)
+
+                    _state.value = _state.value.copy(chapter = chapter)
+
+                    novelRepository
+                        .getChaptersByNovelId(chapter.novelId)
+                        .onSuccess { allNovelChapters ->
+                            _state.value = _state.value.copy(
+                                chapterList = allNovelChapters,
+                                currentChapterIndex = allNovelChapters.indexOfFirst { it.id == chapterId },
+                                isLoading = false,
+                            )
+                        }
+                        .onError { error ->
+                            println("ChapterReaderViewModel | Error getting chapters for novel \"${chapter.novelId}\" Error: $error")
+                            _state.value = _state.value.copy(isLoading = false)
+                        }
                 }
                 .onError { error ->
                     println("ChapterReaderViewModel | Error getting chapter \"$chapterId\"\nError: $error")
@@ -41,11 +59,46 @@ class ChapterReaderViewModel(
                 _state.value = _state.value.copy(isOverlayVisible = !_state.value.isOverlayVisible)
             }
 
-            ChapterReaderAction.OnNextChapterClicked -> TODO()
-            ChapterReaderAction.OnPrevChapterClicked -> TODO()
+            ChapterReaderAction.OnNextChapterClicked -> {
+                println("ChapterReaderViewModel | OnNextChapterClicked")
+                val index = _state.value.currentChapterIndex
+                val chapters = _state.value.chapterList
+                if (index < chapters.lastIndex) {
+                    _state.value = _state.value.copy(currentChapterIndex = index + 1)
+                    loadChapter(chapters[index + 1].id)
+                }
+            }
+
+            ChapterReaderAction.OnPrevChapterClicked -> {
+                println("ChapterReaderViewModel | OnPrevChapterClicked")
+                val index = _state.value.currentChapterIndex
+                val chapters = _state.value.chapterList
+                if (index > 0) {
+                    _state.value = _state.value.copy(currentChapterIndex = index - 1)
+                    loadChapter(chapters[index - 1].id)
+                }
+            }
+
             ChapterReaderAction.OnReturnClicked -> TODO()
             ChapterReaderAction.OnSettingsClicked -> TODO()
             ChapterReaderAction.OnChaptersListClicked -> TODO()
+        }
+    }
+
+    fun loadChapter(chapterId: String) {
+        println("ChapterReaderViewModel | loadChapter | Loading chapter: \"$chapterId\"")
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            novelRepository
+                .getChapterById(chapterId)
+                .onSuccess { chapter ->
+                    println("ChapterReaderViewModel | Success getting chapter: \"$chapterId\"")
+                    _state.value = _state.value.copy(chapter = chapter, isLoading = false)
+                }
+                .onError {
+                    println("ChapterReaderViewModel | Error getting chapter: \"$chapterId\"")
+                    _state.value = _state.value.copy(isLoading = false)
+                }
         }
     }
 }
