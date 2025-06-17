@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
 import androidx.compose.animation.AnimatedVisibility
@@ -9,40 +11,41 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import gb.coding.lightnovel.R
+import gb.coding.lightnovel.core.presentation.util.formatDate
 import gb.coding.lightnovel.reader.data.mock.MockChapters
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ChapterListItem
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailAction
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 import gb.coding.lightnovel.ui.theme.SourceSerif4
 
@@ -63,8 +66,9 @@ fun ChapterReaderScreen(
         return
     }
 
-    val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState()
 
+    val scrollState = rememberScrollState()
     val progress by remember {
         derivedStateOf {
             val max = scrollState.maxValue
@@ -161,6 +165,18 @@ fun ChapterReaderScreen(
             )
         }
     }
+
+    if (state.showModalBottomChaptersList) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { onAction(ChapterReaderAction.OnDismissChaptersListClicked) }
+        ) {
+            ReaderChaptersList(
+                state = state,
+                onChapterClick = { chapterId -> onAction(ChapterReaderAction.OnChapterClicked(chapterId)) }
+            )
+        }
+    }
 }
 
 @PreviewLightDark
@@ -174,8 +190,7 @@ private fun ChapterReaderScreenPreview() {
                 chapter = MockChapters.sample,
             ),
             onAction = {},
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         )
     }
 }

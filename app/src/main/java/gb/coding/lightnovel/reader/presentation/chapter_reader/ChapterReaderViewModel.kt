@@ -81,7 +81,24 @@ class ChapterReaderViewModel(
 
             ChapterReaderAction.OnReturnClicked -> TODO()
             ChapterReaderAction.OnSettingsClicked -> TODO()
-            ChapterReaderAction.OnChaptersListClicked -> TODO()
+
+            is ChapterReaderAction.OnChapterClicked -> {
+                println("ChapterReaderViewModel | OnChapterClicked | ChapterId: ${action.chapterId}")
+                _state.value = _state.value.copy(
+                    currentChapterIndex = _state.value.chapterList.indexOfFirst { it.id == action.chapterId },
+                    showModalBottomChaptersList = false,
+                )
+                loadChapter(action.chapterId)
+            }
+
+            ChapterReaderAction.OnChaptersListClicked -> {
+                println("ChapterReaderViewModel | OnChaptersListClicked")
+                _state.value = _state.value.copy(showModalBottomChaptersList = true)
+            }
+            ChapterReaderAction.OnDismissChaptersListClicked -> {
+                println("ChapterReaderViewModel | OnDismissChaptersListClicked")
+                _state.value = _state.value.copy(showModalBottomChaptersList = false)
+            }
         }
     }
 
