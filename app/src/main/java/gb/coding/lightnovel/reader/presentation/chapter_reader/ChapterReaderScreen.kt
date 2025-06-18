@@ -44,6 +44,7 @@ import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ChapterListItem
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailAction
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
@@ -169,11 +170,26 @@ fun ChapterReaderScreen(
     if (state.showModalBottomChaptersList) {
         ModalBottomSheet(
             sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.background,
             onDismissRequest = { onAction(ChapterReaderAction.OnDismissChaptersListClicked) }
         ) {
             ReaderChaptersList(
                 state = state,
                 onChapterClick = { chapterId -> onAction(ChapterReaderAction.OnChapterClicked(chapterId)) }
+            )
+        }
+    }
+
+    if (state.showModalBottomSettings) {
+        ModalBottomSheet(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = { onAction(ChapterReaderAction.OnSettingsClicked) }
+        ) {
+            ReaderModalSettings(
+                onFontSizeChange = {},
+                onFontSelected = {},
+                onThemeSelected = {},
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }

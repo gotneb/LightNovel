@@ -80,7 +80,14 @@ class ChapterReaderViewModel(
             }
 
             ChapterReaderAction.OnReturnClicked -> TODO()
-            ChapterReaderAction.OnSettingsClicked -> TODO()
+
+            ChapterReaderAction.OnSettingsClicked -> {
+                println("ChapterReaderViewModel | OnSettingsClicked")
+                _state.value = _state.value.copy(
+                    showModalBottomSettings = !_state.value.showModalBottomSettings,
+                    showModalBottomChaptersList = false,
+                )
+            }
 
             is ChapterReaderAction.OnChapterClicked -> {
                 println("ChapterReaderViewModel | OnChapterClicked | ChapterId: ${action.chapterId}")
@@ -93,7 +100,10 @@ class ChapterReaderViewModel(
 
             ChapterReaderAction.OnChaptersListClicked -> {
                 println("ChapterReaderViewModel | OnChaptersListClicked")
-                _state.value = _state.value.copy(showModalBottomChaptersList = true)
+                _state.value = _state.value.copy(
+                    showModalBottomChaptersList = true,
+                    showModalBottomSettings = false,
+                )
             }
             ChapterReaderAction.OnDismissChaptersListClicked -> {
                 println("ChapterReaderViewModel | OnDismissChaptersListClicked")
