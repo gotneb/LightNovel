@@ -1,5 +1,6 @@
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
+import gb.coding.lightnovel.core.domain.model.ReaderFont
 import gb.coding.lightnovel.reader.domain.models.Chapter
 
 data class ChapterReaderState(
@@ -8,6 +9,7 @@ data class ChapterReaderState(
     val isOverlayVisible: Boolean = false,
 
     val fontSize: Float = 16f,
+    val readerFont: ReaderFont = ReaderFont.SourceSerif4,
 
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,

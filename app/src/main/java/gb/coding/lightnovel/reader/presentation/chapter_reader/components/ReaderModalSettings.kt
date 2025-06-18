@@ -26,8 +26,9 @@ import gb.coding.lightnovel.ui.theme.LightNovelTheme
 @Composable
 fun ReaderModalSettings(
     fontSizeValue: Float,
+    fontSelected: ReaderFont,
     onFontSizeChange: (Float) -> Unit,
-    onFontSelected: (String) -> Unit,
+    onFontSelected: (ReaderFont) -> Unit,
     onThemeSelected: (ReaderTheme) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -75,20 +76,20 @@ fun ReaderModalSettings(
         ) {
             FontButton(
                 readerFont = ReaderFont.SourceSerif4,
-                isSelected = false,
-                onClick = { onFontSelected("Source Serif 4") },
+                isSelected = fontSelected == ReaderFont.SourceSerif4,
+                onClick = { onFontSelected(ReaderFont.SourceSerif4) },
                 modifier = Modifier.weight(1f)
             )
             FontButton(
                 readerFont = ReaderFont.Lora,
-                isSelected = true,
-                onClick = { onFontSelected("Lora") },
+                isSelected = fontSelected == ReaderFont.Lora,
+                onClick = { onFontSelected(ReaderFont.Lora) },
                 modifier = Modifier.weight(1f)
             )
             FontButton(
                 readerFont = ReaderFont.NotoSans,
-                isSelected = false,
-                onClick = { onFontSelected("Noto Sans") },
+                isSelected = fontSelected == ReaderFont.NotoSans,
+                onClick = { onFontSelected(ReaderFont.NotoSans) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -124,6 +125,7 @@ private fun ReaderModalSettingsPreview() {
         ReaderModalSettings(
             fontSizeValue = 16f,
             onFontSizeChange = {},
+            fontSelected = ReaderFont.SourceSerif4,
             onFontSelected = {},
             onThemeSelected = {},
             modifier = Modifier

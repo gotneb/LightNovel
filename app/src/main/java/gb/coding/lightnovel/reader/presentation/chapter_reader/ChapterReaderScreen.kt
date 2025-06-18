@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gb.coding.lightnovel.core.domain.mapper.toFontFamily
 import gb.coding.lightnovel.core.presentation.util.formatDate
 import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ChapterListItem
@@ -97,7 +98,7 @@ fun ChapterReaderScreen(
                     textAlign = TextAlign.Center,
                     fontSize = (state.fontSize + 2).sp,
                     letterSpacing = 1.4.sp,
-                    fontFamily = SourceSerif4,
+                    fontFamily = state.readerFont.toFontFamily(),
                     modifier = Modifier
                         .padding(top = 56.dp)
                         .fillMaxWidth(),
@@ -109,7 +110,7 @@ fun ChapterReaderScreen(
                 fontSize = (state.fontSize + 4).sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.4.sp,
-                fontFamily = SourceSerif4,
+                fontFamily = state.readerFont.toFontFamily(),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -121,7 +122,7 @@ fun ChapterReaderScreen(
                 text = state.chapter.content,
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
-                fontFamily = SourceSerif4,
+                fontFamily = state.readerFont.toFontFamily(),
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -187,8 +188,9 @@ fun ChapterReaderScreen(
         ) {
             ReaderModalSettings(
                 fontSizeValue = state.fontSize,
+                fontSelected = state.readerFont,
                 onFontSizeChange = { onAction(ChapterReaderAction.OnFontSizeChanged(it)) },
-                onFontSelected = {},
+                onFontSelected = { onAction(ChapterReaderAction.OnFontSelected(it)) },
                 onThemeSelected = {},
                 modifier = Modifier.padding(horizontal = 16.dp)
             )

@@ -1,5 +1,7 @@
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
+import gb.coding.lightnovel.core.domain.model.ReaderFont
+
 sealed interface ChapterReaderAction {
     data object OnScreenClicked: ChapterReaderAction
 
@@ -8,6 +10,7 @@ sealed interface ChapterReaderAction {
     data object OnNextChapterClicked: ChapterReaderAction
 
     data class OnFontSizeChanged(val fontSize: Float): ChapterReaderAction
+    data class OnFontSelected(val fontFamily: ReaderFont): ChapterReaderAction
 
     data object OnSettingsClicked: ChapterReaderAction
 
