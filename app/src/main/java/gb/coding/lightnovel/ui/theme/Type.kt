@@ -16,6 +16,20 @@ val SourceSerif4 = FontFamily(
     Font(R.font.source_serif_4_bold, FontWeight.Bold),
 )
 
+val Lora = FontFamily(
+    Font(R.font.lora, FontWeight.Normal),
+    Font(R.font.lora_medium, FontWeight.Medium),
+    Font(R.font.lora_semibold, FontWeight.SemiBold),
+    Font(R.font.lora_bold, FontWeight.Bold),
+)
+
+val NotoSans = FontFamily(
+    Font(R.font.noto_sans, FontWeight.Normal),
+    Font(R.font.noto_sans_medium, FontWeight.Medium),
+    Font(R.font.noto_sans_semibold, FontWeight.SemiBold),
+    Font(R.font.noto_sans_bold, FontWeight.Bold),
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

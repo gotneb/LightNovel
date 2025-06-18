@@ -9,6 +9,8 @@ data class Chapter(
     val id: String,
     val part: String?, // can be a book, volume, arc, etc...
     val title: String,
+    @SerialName("novel_id")
+    val novelId: String,
     // TODO: Investigate a better approach, I'm only letting it be empty for now
     // Because I need to avoid data overhead in the chapter list when fetching all chapters
     val content: String = "",
