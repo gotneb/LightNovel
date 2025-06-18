@@ -6,7 +6,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -27,9 +25,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,16 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.core.domain.mapper.toFontFamily
 import gb.coding.lightnovel.core.domain.model.ReaderTheme
-import gb.coding.lightnovel.core.presentation.util.formatDate
 import gb.coding.lightnovel.reader.data.mock.MockChapters
-import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ChapterListItem
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
-import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailAction
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
-import gb.coding.lightnovel.ui.theme.SourceSerif4
 
 @Composable
 fun ChapterReaderScreen(

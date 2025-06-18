@@ -25,6 +25,7 @@ import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
 import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
+import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderEvent
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
@@ -152,6 +153,16 @@ class MainActivity : ComponentActivity() {
                         composable<Route.ChapterReader> {
                             val viewModel = koinViewModel<ChapterReaderViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
+
+                            LaunchedEffect(Unit) {
+                                viewModel.events.collect { event ->
+                                    when (event) {
+                                        ChapterReaderEvent.NavigateBack -> {
+                                            navController.popBackStack()
+                                        }
+                                    }
+                                }
+                            }
 
                             ChapterReaderScreen(
                                 state = state,

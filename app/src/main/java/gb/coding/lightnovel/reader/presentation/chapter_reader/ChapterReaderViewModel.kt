@@ -6,14 +6,19 @@ import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ChapterReaderViewModel(
     savedStateHandle: SavedStateHandle,
     private val novelRepository: NovelRepository,
 ) : ViewModel() {
+
+    private val _events = Channel<ChapterReaderEvent>()
+    val events = _events.receiveAsFlow()
 
     private val _state = MutableStateFlow(ChapterReaderState())
     val state = _state.asStateFlow()
@@ -92,7 +97,11 @@ class ChapterReaderViewModel(
                 _state.value = _state.value.copy(readerTheme = action.theme)
             }
 
-            ChapterReaderAction.OnReturnClicked -> TODO()
+            ChapterReaderAction.OnReturnClicked -> {
+                viewModelScope.launch {
+                    _events.send(ChapterReaderEvent.NavigateBack)
+                }
+            }
 
             ChapterReaderAction.OnSettingsClicked -> {
                 println("ChapterReaderViewModel | OnSettingsClicked")
