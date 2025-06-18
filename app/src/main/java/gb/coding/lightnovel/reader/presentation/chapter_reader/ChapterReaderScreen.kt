@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.core.domain.mapper.toFontFamily
+import gb.coding.lightnovel.core.domain.model.ReaderTheme
 import gb.coding.lightnovel.core.presentation.util.formatDate
 import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ChapterListItem
@@ -78,8 +79,21 @@ fun ChapterReaderScreen(
         }
     }
 
+    // FIX: Serpia theme doesn't apply properly
+    val backgroundColor = when (state.readerTheme) {
+        ReaderTheme.Light, ReaderTheme.Dark -> MaterialTheme.colorScheme.background
+        ReaderTheme.Serpia -> Color(0xFFBFB7A0)
+    }
+
+    val textColor = when (state.readerTheme) {
+        ReaderTheme.Light, ReaderTheme.Dark -> MaterialTheme.colorScheme.onBackground
+        ReaderTheme.Serpia -> Color(0xFF302E33)
+    }
+
     Box(
-        modifier.pointerInput(Unit) {
+        modifier = modifier
+            .background(backgroundColor)
+            .pointerInput(Unit) {
             detectTapGestures(
                 onTap = { onAction(ChapterReaderAction.OnScreenClicked) }
             )
@@ -94,7 +108,7 @@ fun ChapterReaderScreen(
             state.chapter!!.part?.let { part ->
                 Text(
                     text = part,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = textColor,
                     textAlign = TextAlign.Center,
                     fontSize = (state.fontSize + 2).sp,
                     letterSpacing = 1.4.sp,
@@ -106,7 +120,7 @@ fun ChapterReaderScreen(
             }
             Text(
                 text = "Capítulo ${state.chapter.chapterNumber}:\n${state.chapter.title}",
-                color = MaterialTheme.colorScheme.onBackground,
+                color = textColor,
                 fontSize = (state.fontSize + 4).sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.4.sp,
@@ -120,10 +134,10 @@ fun ChapterReaderScreen(
 
             Text(
                 text = state.chapter.content,
+                color = textColor,
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
-                fontFamily = state.readerFont.toFontFamily(),
-                color = MaterialTheme.colorScheme.onBackground
+                fontFamily = state.readerFont.toFontFamily()
             )
         }
 
@@ -189,10 +203,10 @@ fun ChapterReaderScreen(
             ReaderModalSettings(
                 fontSizeValue = state.fontSize,
                 fontSelected = state.readerFont,
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onFontSizeChange = { onAction(ChapterReaderAction.OnFontSizeChanged(it)) },
                 onFontSelected = { onAction(ChapterReaderAction.OnFontSelected(it)) },
-                onThemeSelected = {},
-                modifier = Modifier.padding(horizontal = 16.dp)
+                onThemeSelected = { onAction(ChapterReaderAction.OnThemeSelected(it)) }
             )
         }
     }
@@ -205,11 +219,11 @@ private fun ChapterReaderScreenPreview() {
         ChapterReaderScreen(
             state = ChapterReaderState(
                 isLoading = false,
-                isOverlayVisible = true,
+                isOverlayVisible = false,
                 chapter = MockChapters.sample,
+                readerTheme = ReaderTheme.Light
             ),
             onAction = {},
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         )
     }
 }

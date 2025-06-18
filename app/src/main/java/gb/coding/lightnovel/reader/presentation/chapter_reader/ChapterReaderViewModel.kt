@@ -87,6 +87,10 @@ class ChapterReaderViewModel(
                 println("ChapterReaderViewModel | OnFontSelected | Font: ${action.fontFamily}")
                 _state.value = _state.value.copy(readerFont = action.fontFamily)
             }
+            is ChapterReaderAction.OnThemeSelected -> {
+                println("ChapterReaderViewModel | OnThemeSelected | Theme: ${action.theme}")
+                _state.value = _state.value.copy(readerTheme = action.theme)
+            }
 
             ChapterReaderAction.OnReturnClicked -> TODO()
 

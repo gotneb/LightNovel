@@ -50,6 +50,7 @@ fun ReaderModalSettings(
                 value = fontSizeValue,
                 onValueChange = onFontSizeChange,
                 valueRange = 8f..24f,
+                steps = 16,
                 colors = SliderDefaults.colors().copy(
                     thumbColor = Color(0xFF66558E),
                     activeTrackColor = Color(0xFF66558E),
@@ -124,8 +125,8 @@ private fun ReaderModalSettingsPreview() {
     LightNovelTheme {
         ReaderModalSettings(
             fontSizeValue = 16f,
-            onFontSizeChange = {},
             fontSelected = ReaderFont.SourceSerif4,
+            onFontSizeChange = {},
             onFontSelected = {},
             onThemeSelected = {},
             modifier = Modifier

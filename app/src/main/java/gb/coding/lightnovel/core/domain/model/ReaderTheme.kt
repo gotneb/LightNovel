@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 enum class ReaderTheme(
     val label: String,
     val backgroundColor: Color,
-    val textColor: Color,
+    val textColor: Color
 ) {
     Light("Light", Color.White, Color.Black),
     Dark("Dark", Color(0xFF302E33), Color.White),
