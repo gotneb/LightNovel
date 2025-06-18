@@ -7,6 +7,8 @@ data class ChapterReaderState(
     val isLoading: Boolean = true,
     val isOverlayVisible: Boolean = false,
 
+    val fontSize: Float = 16f,
+
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,
 

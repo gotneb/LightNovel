@@ -79,6 +79,11 @@ class ChapterReaderViewModel(
                 }
             }
 
+            is ChapterReaderAction.OnFontSizeChanged -> {
+                println("ChapterReaderViewModel | OnFontSizeChanged | Size: ${action.fontSize}")
+                _state.value = _state.value.copy(fontSize = action.fontSize)
+            }
+
             ChapterReaderAction.OnReturnClicked -> TODO()
 
             ChapterReaderAction.OnSettingsClicked -> {

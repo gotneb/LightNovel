@@ -95,7 +95,7 @@ fun ChapterReaderScreen(
                     text = part,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
+                    fontSize = (state.fontSize + 2).sp,
                     letterSpacing = 1.4.sp,
                     fontFamily = SourceSerif4,
                     modifier = Modifier
@@ -106,7 +106,7 @@ fun ChapterReaderScreen(
             Text(
                 text = "Capítulo ${state.chapter.chapterNumber}:\n${state.chapter.title}",
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 22.sp,
+                fontSize = (state.fontSize + 4).sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.4.sp,
                 fontFamily = SourceSerif4,
@@ -119,7 +119,7 @@ fun ChapterReaderScreen(
 
             Text(
                 text = state.chapter.content,
-                fontSize = 16.sp,
+                fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
                 fontFamily = SourceSerif4,
                 color = MaterialTheme.colorScheme.onBackground
@@ -186,7 +186,8 @@ fun ChapterReaderScreen(
             onDismissRequest = { onAction(ChapterReaderAction.OnSettingsClicked) }
         ) {
             ReaderModalSettings(
-                onFontSizeChange = {},
+                fontSizeValue = state.fontSize,
+                onFontSizeChange = { onAction(ChapterReaderAction.OnFontSizeChanged(it)) },
                 onFontSelected = {},
                 onThemeSelected = {},
                 modifier = Modifier.padding(horizontal = 16.dp)

@@ -7,6 +7,8 @@ sealed interface ChapterReaderAction {
     data object OnPrevChapterClicked: ChapterReaderAction
     data object OnNextChapterClicked: ChapterReaderAction
 
+    data class OnFontSizeChanged(val fontSize: Float): ChapterReaderAction
+
     data object OnSettingsClicked: ChapterReaderAction
 
     data class OnChapterClicked(val chapterId: String): ChapterReaderAction

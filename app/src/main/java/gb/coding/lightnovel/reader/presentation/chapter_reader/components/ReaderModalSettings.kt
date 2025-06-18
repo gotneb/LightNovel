@@ -25,6 +25,7 @@ import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
 fun ReaderModalSettings(
+    fontSizeValue: Float,
     onFontSizeChange: (Float) -> Unit,
     onFontSelected: (String) -> Unit,
     onThemeSelected: (ReaderTheme) -> Unit,
@@ -45,10 +46,9 @@ fun ReaderModalSettings(
                 modifier = Modifier.size(18.dp)
             )
             Slider(
-                value = 16f,
+                value = fontSizeValue,
                 onValueChange = onFontSizeChange,
-                valueRange = 8f..36f,
-                steps = 2,
+                valueRange = 8f..24f,
                 colors = SliderDefaults.colors().copy(
                     thumbColor = Color(0xFF66558E),
                     activeTrackColor = Color(0xFF66558E),
@@ -122,6 +122,7 @@ fun ReaderModalSettings(
 private fun ReaderModalSettingsPreview() {
     LightNovelTheme {
         ReaderModalSettings(
+            fontSizeValue = 16f,
             onFontSizeChange = {},
             onFontSelected = {},
             onThemeSelected = {},
