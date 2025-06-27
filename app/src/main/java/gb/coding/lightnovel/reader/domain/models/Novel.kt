@@ -12,5 +12,4 @@ data class Novel(
     val coverImage: String,
     val status: String,
     val description: String,
-    val tags: List<String> = emptyList(),
 )
