@@ -3,6 +3,7 @@ package gb.coding.lightnovel.reader.presentation.novel_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gb.coding.lightnovel.core.domain.model.LanguageCode
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
@@ -63,7 +64,9 @@ class NovelDetailViewModel(
                     println("NovelDetailViewModel | getNovel | Success")
                     _state.update { it.copy(novel = novel) }
 
+                    // TODO: Is it allowed in MVI? Those calls seems to be invalid with the pattern... Need to check out it later!
                     getNovelChapters(id)
+                    getNovelTags(id, novel.language)
                 }
                 .onError { error ->
                     println("NovelDetailViewModel | getNovel | Error: $error")
@@ -87,6 +90,22 @@ class NovelDetailViewModel(
                     _state.update { it.copy(isLoading = false) }
                 }
 
+        }
+    }
+
+    fun getNovelTags(id: String, language: LanguageCode) {
+        println("NovelDetailViewModel | getNovelTags | Searching for \"${language.code}\" tags...")
+        viewModelScope.launch {
+            novelRepository
+                // TODO: Get language from novel
+                .getTagsByNovelId(id, language)
+                .onSuccess { tags ->
+                    println("NovelDetailViewModel | getNovelTags | Success")
+                    _state.update { it.copy(tags = tags) }
+                }
+                .onError { error ->
+                    println("NovelDetailViewModel | getNovelTags | Error: $error")
+                }
         }
     }
 }

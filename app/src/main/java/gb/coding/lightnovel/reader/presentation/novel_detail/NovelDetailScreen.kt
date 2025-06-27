@@ -207,7 +207,7 @@ fun NovelDetailScreen(
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                 ) {
-                    state.novel.tags.forEach { tag ->
+                    state.tags.forEach { tag ->
                         TagChip(text = tag)
                     }
                 }
@@ -232,7 +232,6 @@ fun NovelDetailScreen(
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.filter_list),
-                            tint = Color.Black,
                             contentDescription = null,
                             modifier = Modifier.rotate(rotation)
                         )
@@ -277,6 +276,7 @@ private fun NovelDetailScreenPreview() {
                 novel = MockNovels.sample,
                 chapters = MockChapters.samples,
                 isLoading = false,
+                tags = listOf("Action", "Adult", "Adventure", "Martial Arts", "Fantasy", "Romance", "Sobrenatural", "Xianxia"),
             ),
             onAction = {},
             modifier = Modifier
