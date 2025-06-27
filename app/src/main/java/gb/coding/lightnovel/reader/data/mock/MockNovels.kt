@@ -1,10 +1,12 @@
 package gb.coding.lightnovel.reader.data.mock
 
+import gb.coding.lightnovel.core.domain.model.LanguageCode
 import gb.coding.lightnovel.reader.domain.models.Novel
 
 object MockNovels {
     val sample = Novel(
         id = "1",
+        language = LanguageCode.GERMAN,
         title = "Renegade Immortal",
         author = "Wang Er",
         status = "Ativo",

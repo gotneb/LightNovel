@@ -66,7 +66,7 @@ class NovelDetailViewModel(
 
                     // TODO: Is it allowed in MVI? Those calls seems to be invalid with the pattern... Need to check out it later!
                     getNovelChapters(id)
-                    getNovelTags(id)
+                    getNovelTags(id, novel.language)
                 }
                 .onError { error ->
                     println("NovelDetailViewModel | getNovel | Error: $error")
@@ -93,12 +93,12 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovelTags(id: String) {
-        println("NovelDetailViewModel | getNovelTags | Start")
+    fun getNovelTags(id: String, language: LanguageCode) {
+        println("NovelDetailViewModel | getNovelTags | Searching for \"${language.code}\" tags...")
         viewModelScope.launch {
             novelRepository
                 // TODO: Get language from novel
-                .getTagsByNovelId(id, LanguageCode.GERMAN)
+                .getTagsByNovelId(id, language)
                 .onSuccess { tags ->
                     println("NovelDetailViewModel | getNovelTags | Success")
                     _state.update { it.copy(tags = tags) }

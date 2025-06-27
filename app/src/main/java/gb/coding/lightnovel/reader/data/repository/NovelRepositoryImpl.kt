@@ -101,10 +101,7 @@ class NovelRepositoryImpl(
             }
             .decodeList<Chapter>()
 
-        println("NovelRepositoryImpl | getChaptersByNovelId | Chapter count: ${chapters.size}")
-        chapters.forEach {
-            println("NovelRepositoryImpl | getChaptersByNovelId | Chapter | id: \"${it.id}\" | title: \"${it.title}\"")
-        }
+        println("NovelRepositoryImpl | getChaptersByNovelId | Got ${chapters.size} chapters")
 
         return Result.Success(chapters)
     }
