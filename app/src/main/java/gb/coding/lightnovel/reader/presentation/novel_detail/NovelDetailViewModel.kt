@@ -7,7 +7,7 @@ import gb.coding.lightnovel.core.domain.model.LanguageCode
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
-import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent.Navigate2ChapterReader
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +39,7 @@ class NovelDetailViewModel(
             is NovelDetailAction.OnChapterClicked -> {
                 println("NovelDetailViewModel | onAction | OnChapterClicked")
                 viewModelScope.launch {
-                    _events.send(NovelDetailEvent.Navigate2ChapterReader(action.chapterId))
+                    _events.send(Navigate2ChapterReader(action.chapterId))
                 }
             }
 
@@ -49,6 +49,17 @@ class NovelDetailViewModel(
                     chapters = it.chapters.reversed(),
                     invertList = !it.invertList
                 ) }
+            }
+
+            // TODO: Implement this
+            // We don't have a local database yet, so this is just a placeholder
+            NovelDetailAction.OnAdd2LibraryClicked -> {
+                println("NovelDetailViewModel | onAction | OnAdd2LibraryClicked")
+                _state.update { it.copy(isNovelSaved2Library = true) }
+            }
+            NovelDetailAction.OnRemoveFromLibraryClicked -> {
+                println("NovelDetailViewModel | onAction | OnRemoveFromLibraryClicked")
+                _state.update { it.copy(isNovelSaved2Library = false) }
             }
         }
     }
