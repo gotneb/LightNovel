@@ -27,6 +27,7 @@ import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderEvent
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
+import gb.coding.lightnovel.reader.presentation.library.LibraryEvent
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
 import gb.coding.lightnovel.reader.presentation.library.LibraryViewModel
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent
@@ -117,11 +118,19 @@ class MainActivity : ComponentActivity() {
                             println("LibraryScreen | Composable")
                             val state by libraryViewModel.state.collectAsStateWithLifecycle()
 
+                            LaunchedEffect(Unit) {
+                                libraryViewModel.events.collect { event ->
+                                    when (event) {
+                                        is LibraryEvent.Navigate2NovelDetail -> {
+                                            navController.navigate(Route.NovelDetail(event.novelId))
+                                        }
+                                    }
+                                }
+                            }
+
                             LibraryScreen(
                                 state = state,
-                                onAction = {
-                                    navController.navigate(Route.NovelDetail)
-                                },
+                                onAction = libraryViewModel::onAction,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(innerPadding)
