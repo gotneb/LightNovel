@@ -1,10 +1,12 @@
 package gb.coding.lightnovel.reader.data.repository
 
 import gb.coding.lightnovel.core.domain.mapper.toBookmarkedNovel
+import gb.coding.lightnovel.core.domain.mapper.toNovel
 import gb.coding.lightnovel.reader.data.local.BookmarkedNovelDao
 import gb.coding.lightnovel.reader.domain.models.Novel
 import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class BookmarkedNovelRepositoryImpl(
     private val bookmarkedNovelDao: BookmarkedNovelDao
@@ -26,6 +28,11 @@ class BookmarkedNovelRepositoryImpl(
     }
 
     override fun getAllNovels(): Flow<List<Novel>> {
-        TODO("Not yet implemented")
+        println("BookmarkedNovelRepositoryImpl | Getting all bookmarked novels...")
+        return bookmarkedNovelDao.getAllNovels().map { bookmarkedNovels ->
+            bookmarkedNovels.map { bookmarkedNovel ->
+                bookmarkedNovel.toNovel()
+            }
+        }
     }
 }
