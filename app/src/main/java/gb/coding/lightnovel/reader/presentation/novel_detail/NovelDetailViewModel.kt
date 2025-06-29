@@ -11,11 +11,8 @@ import gb.coding.lightnovel.reader.domain.repository.NovelRepository
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent.Navigate2ChapterReader
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -85,6 +82,8 @@ class NovelDetailViewModel(
                     println("NovelDetailViewModel | getNovel | Success")
                     _state.update { it.copy(novel = novel) }
 
+                    updateBookmarkStatus(novel.id)
+
                     // TODO: Is it allowed in MVI? Those calls seems to be invalid with the pattern... Need to check out it later!
                     getNovelChapters(id)
                     getNovelTags(id, novel.language)
@@ -126,6 +125,17 @@ class NovelDetailViewModel(
                 }
                 .onError { error ->
                     println("NovelDetailViewModel | getNovelTags | Error: $error")
+                }
+        }
+    }
+
+    private fun updateBookmarkStatus(novelId: String) {
+        viewModelScope.launch {
+            bookmarkedNovelRepository
+                .isNovelBookmarked(novelId)
+                .collect { isBookmarked ->
+                    println("NovelDetailViewModel | observeBookmarkStatus | isBookmarked: $isBookmarked")
+                    _state.update { it.copy(isNovelSaved2Library = isBookmarked) }
                 }
         }
     }

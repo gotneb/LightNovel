@@ -21,7 +21,8 @@ class BookmarkedNovelRepositoryImpl(
     }
 
     override fun isNovelBookmarked(novelId: String): Flow<Boolean> {
-        TODO("Not yet implemented")
+        println("BookmarkedNovelRepositoryImpl | Checking if novel \"$novelId\" is bookmarked...")
+        return bookmarkedNovelDao.isBookmarked(novelId)
     }
 
     override fun getAllNovels(): Flow<List<Novel>> {
