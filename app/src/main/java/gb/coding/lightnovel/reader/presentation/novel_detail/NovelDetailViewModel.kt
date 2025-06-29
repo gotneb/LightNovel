@@ -6,17 +6,22 @@ import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.model.LanguageCode
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
+import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent.Navigate2ChapterReader
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NovelDetailViewModel(
     private val novelRepository: NovelRepository,
+    private val bookmarkedNovelRepository: BookmarkedNovelRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -51,15 +56,20 @@ class NovelDetailViewModel(
                 ) }
             }
 
-            // TODO: Implement this
-            // We don't have a local database yet, so this is just a placeholder
             NovelDetailAction.OnAdd2LibraryClicked -> {
                 println("NovelDetailViewModel | onAction | OnAdd2LibraryClicked")
-                _state.update { it.copy(isNovelSaved2Library = true) }
+                viewModelScope.launch {
+                    bookmarkedNovelRepository.addNovel(state.value.novel!!)
+                    _state.update { it.copy(isNovelSaved2Library = true) }
+                }
             }
+
             NovelDetailAction.OnRemoveFromLibraryClicked -> {
                 println("NovelDetailViewModel | onAction | OnRemoveFromLibraryClicked")
-                _state.update { it.copy(isNovelSaved2Library = false) }
+                viewModelScope.launch {
+                    bookmarkedNovelRepository.removeNovel(state.value.novel!!)
+                    _state.update { it.copy(isNovelSaved2Library = false) }
+                }
             }
         }
     }
