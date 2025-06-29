@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.model.LanguageCode
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
+import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
-import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent.Navigate2ChapterReader
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class NovelDetailViewModel(
     private val novelRepository: NovelRepository,
+    private val bookmarkedNovelRepository: BookmarkedNovelRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -27,9 +29,14 @@ class NovelDetailViewModel(
     val events = _events.receiveAsFlow()
 
     init {
-        // TODO: Set novelId in its own state, so it's get easy to call helper functions
+        // TODO: Set novelId in its own state, so it's more convenient to call helper functions
         val novelId = savedStateHandle.get<String>("novelId")
         println("NovelDetailViewModel | init | novelId: $novelId")
+
+        /*
+         * TODO: When a novel is saved on user's device, we only need to fetch the chapters
+         *  and tags of the novel.
+         */
 
         getNovel(novelId!!)
     }
@@ -39,7 +46,7 @@ class NovelDetailViewModel(
             is NovelDetailAction.OnChapterClicked -> {
                 println("NovelDetailViewModel | onAction | OnChapterClicked")
                 viewModelScope.launch {
-                    _events.send(NovelDetailEvent.Navigate2ChapterReader(action.chapterId))
+                    _events.send(Navigate2ChapterReader(action.chapterId))
                 }
             }
 
@@ -50,10 +57,26 @@ class NovelDetailViewModel(
                     invertList = !it.invertList
                 ) }
             }
+
+            NovelDetailAction.OnAdd2LibraryClicked -> {
+                println("NovelDetailViewModel | onAction | OnAdd2LibraryClicked")
+                viewModelScope.launch {
+                    bookmarkedNovelRepository.addNovel(state.value.novel!!)
+                    _state.update { it.copy(isNovelSaved2Library = true) }
+                }
+            }
+
+            NovelDetailAction.OnRemoveFromLibraryClicked -> {
+                println("NovelDetailViewModel | onAction | OnRemoveFromLibraryClicked")
+                viewModelScope.launch {
+                    bookmarkedNovelRepository.removeNovel(state.value.novel!!)
+                    _state.update { it.copy(isNovelSaved2Library = false) }
+                }
+            }
         }
     }
 
-    fun getNovel(id: String) {
+    private fun getNovel(id: String) {
         println("NovelDetailViewModel | getNovel | id: $id")
         _state.update { it.copy(isLoading = true) }
 
@@ -63,6 +86,8 @@ class NovelDetailViewModel(
                 .onSuccess { novel ->
                     println("NovelDetailViewModel | getNovel | Success")
                     _state.update { it.copy(novel = novel) }
+
+                    updateBookmarkStatus(novel.id)
 
                     // TODO: Is it allowed in MVI? Those calls seems to be invalid with the pattern... Need to check out it later!
                     getNovelChapters(id)
@@ -75,7 +100,7 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovelChapters(id: String) {
+    private fun getNovelChapters(id: String) {
         println("NovelDetailViewModel | getNovelChapters | Novel id: \"$id\"")
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -93,7 +118,7 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovelTags(id: String, language: LanguageCode) {
+    private fun getNovelTags(id: String, language: LanguageCode) {
         println("NovelDetailViewModel | getNovelTags | Searching for \"${language.code}\" tags...")
         viewModelScope.launch {
             novelRepository
@@ -105,6 +130,17 @@ class NovelDetailViewModel(
                 }
                 .onError { error ->
                     println("NovelDetailViewModel | getNovelTags | Error: $error")
+                }
+        }
+    }
+
+    private fun updateBookmarkStatus(novelId: String) {
+        viewModelScope.launch {
+            bookmarkedNovelRepository
+                .isNovelBookmarked(novelId)
+                .collect { isBookmarked ->
+                    println("NovelDetailViewModel | observeBookmarkStatus | isBookmarked: $isBookmarked")
+                    _state.update { it.copy(isNovelSaved2Library = isBookmarked) }
                 }
         }
     }

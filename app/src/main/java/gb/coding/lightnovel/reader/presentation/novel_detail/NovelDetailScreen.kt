@@ -1,5 +1,6 @@
 package gb.coding.lightnovel.reader.presentation.novel_detail
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +20,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,7 +74,7 @@ fun NovelDetailScreen(
         }
         return
     }
-    
+
     val infoShadow = Shadow(
         color = Color.Black.copy(alpha = 0.5f),
         offset = Offset(x = 2f, y = 2f),
@@ -211,6 +216,63 @@ fun NovelDetailScreen(
                         TagChip(text = tag)
                     }
                 }
+
+                Crossfade(
+                    targetState = state.isNovelSaved2Library,
+                    label = "isNovelSaved2LibraryAnimation"
+                ) { isInLibrary ->
+                    when (isInLibrary) {
+                        true -> FilledTonalButton(
+                            onClick = { onAction(NovelDetailAction.OnRemoveFromLibraryClicked) },
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = "Remover da biblioteca",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                                Icon(
+                                    painter = painterResource(R.drawable.bookmark_remove),
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+
+                        false -> Button(
+                            onClick = { onAction(NovelDetailAction.OnAdd2LibraryClicked) },
+                            // TODO: Define a global theme, it's tedious having to define everytime the color manually
+                            colors = ButtonDefaults.buttonColors().copy(
+                                containerColor = Color(0xFF66558E),
+                                contentColor = Color.White,
+                            ),
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = "Adicionar na biblioteca",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                                Icon(
+                                    painter = painterResource(R.drawable.bookmark_add),
+                                    contentDescription = null,
+                                )
+                            }
+                        }
+                    }
+                }
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -247,7 +309,7 @@ fun NovelDetailScreen(
         ) { chapter ->
             Column(
                 Modifier
-                    .clickable{ onAction(NovelDetailAction.OnChapterClicked(chapter.id)) }
+                    .clickable { onAction(NovelDetailAction.OnChapterClicked(chapter.id)) }
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
@@ -274,9 +336,19 @@ private fun NovelDetailScreenPreview() {
         NovelDetailScreen(
             state = NovelDetailState(
                 novel = MockNovels.sample,
+                isNovelSaved2Library = false,
                 chapters = MockChapters.samples,
                 isLoading = false,
-                tags = listOf("Action", "Adult", "Adventure", "Martial Arts", "Fantasy", "Romance", "Sobrenatural", "Xianxia"),
+                tags = listOf(
+                    "Action",
+                    "Adult",
+                    "Adventure",
+                    "Martial Arts",
+                    "Fantasy",
+                    "Romance",
+                    "Sobrenatural",
+                    "Xianxia"
+                ),
             ),
             onAction = {},
             modifier = Modifier
