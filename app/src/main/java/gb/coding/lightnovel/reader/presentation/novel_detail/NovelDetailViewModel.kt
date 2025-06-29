@@ -29,9 +29,14 @@ class NovelDetailViewModel(
     val events = _events.receiveAsFlow()
 
     init {
-        // TODO: Set novelId in its own state, so it's get easy to call helper functions
+        // TODO: Set novelId in its own state, so it's more convenient to call helper functions
         val novelId = savedStateHandle.get<String>("novelId")
         println("NovelDetailViewModel | init | novelId: $novelId")
+
+        /*
+         * TODO: When a novel is saved on user's device, we only need to fetch the chapters
+         *  and tags of the novel.
+         */
 
         getNovel(novelId!!)
     }
@@ -71,7 +76,7 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovel(id: String) {
+    private fun getNovel(id: String) {
         println("NovelDetailViewModel | getNovel | id: $id")
         _state.update { it.copy(isLoading = true) }
 
@@ -95,7 +100,7 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovelChapters(id: String) {
+    private fun getNovelChapters(id: String) {
         println("NovelDetailViewModel | getNovelChapters | Novel id: \"$id\"")
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -113,7 +118,7 @@ class NovelDetailViewModel(
         }
     }
 
-    fun getNovelTags(id: String, language: LanguageCode) {
+    private fun getNovelTags(id: String, language: LanguageCode) {
         println("NovelDetailViewModel | getNovelTags | Searching for \"${language.code}\" tags...")
         viewModelScope.launch {
             novelRepository
