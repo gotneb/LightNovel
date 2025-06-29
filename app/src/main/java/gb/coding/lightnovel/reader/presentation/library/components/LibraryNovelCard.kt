@@ -32,8 +32,9 @@ fun LibraryNovelCard(
         AsyncImage(
             model = if (LocalInspectionMode.current) R.drawable.image_placeholder else novel.coverImage,
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
             modifier = Modifier
+                // Standard size of each novel cover
+                .aspectRatio(393f / 562f)
                 .clip(RoundedCornerShape(8.dp))
         )
         Text(
