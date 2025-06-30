@@ -9,6 +9,7 @@ import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
 import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
+import gb.coding.lightnovel.reader.presentation.library.LibraryViewModel
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailViewModel
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
@@ -43,4 +44,5 @@ val appModule = module {
     viewModelOf(::BrowseViewModel)
     viewModelOf(::NovelDetailViewModel)
     viewModelOf(::ChapterReaderViewModel)
+    viewModelOf(::LibraryViewModel)
 }

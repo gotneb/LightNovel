@@ -70,13 +70,13 @@ fun LibraryScreen(
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
                     placeholder = { Text("Pesquisar na biblioteca...") },
-                    onSearch = TODO()
+                    onSearch = { TODO() }
                 )
             }
 
             items(state.novels) { novel ->
                 LibraryNovelCard(
-                    novel = MockNovels.sample,
+                    novel = novel,
                     onClick = { onAction(LibraryAction.OnNovelClicked(it)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -128,7 +128,9 @@ fun LibraryScreen(
 private fun LibraryScreenPreview() {
     LightNovelTheme {
         LibraryScreen(
-            state = LibraryState(),
+            state = LibraryState(
+                novels = MockNovels.samples
+            ),
             onAction = {},
             modifier = Modifier.fillMaxSize()
         )
