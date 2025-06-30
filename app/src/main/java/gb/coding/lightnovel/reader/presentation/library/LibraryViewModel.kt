@@ -2,7 +2,9 @@ package gb.coding.lightnovel.reader.presentation.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gb.coding.lightnovel.reader.domain.models.Novel
 import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
+import gb.coding.lightnovel.reader.presentation.library.LibraryEvent.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,11 +27,10 @@ class LibraryViewModel(
         viewModelScope.launch {
             bookmarkedNovelRepository.getAllNovels()
                 .collect { bookmarkedNovels ->
-                    _state.update {
-                        it.copy(
-                            novels = bookmarkedNovels
-                        )
-                    }
+                    _state.update { it.copy(
+                        novels = bookmarkedNovels,
+                        filteredNovels = bookmarkedNovels,
+                    ) }
                 }
         }
     }
@@ -39,9 +40,24 @@ class LibraryViewModel(
             is LibraryAction.OnNovelClicked -> {
                 println("LibraryViewModel | OnNovelClicked | Clicked on novel \"${action.novel.title}\" - ${action.novel.id}")
                 viewModelScope.launch {
-                    _events.send(LibraryEvent.Navigate2NovelDetail(action.novel.id))
+                    _events.send(Navigate2NovelDetail(action.novel.id))
                 }
             }
+
+            is LibraryAction.OnSearchQueryChanged -> {
+                println("LibraryViewModel | OnSearchQueryChanged | Query: \"${action.query}\"")
+                _state.update { it.copy(
+                    searchQuery = action.query,
+                    filteredNovels = filterBookmarkedNovels(action.query)
+                ) }
+            }
         }
+    }
+
+    private fun filterBookmarkedNovels(name: String): List<Novel> {
+        if (name.isBlank() || name.isEmpty()) {
+            return state.value.novels
+        }
+        return state.value.novels.filter { it.title.contains(name, ignoreCase = true) }
     }
 }
