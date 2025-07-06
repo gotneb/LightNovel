@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.core.domain.mapper.toFontFamily
 import gb.coding.lightnovel.core.domain.model.ReaderTheme
 import gb.coding.lightnovel.reader.data.mock.MockChapters
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordHighlightText
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
@@ -86,10 +87,10 @@ fun ChapterReaderScreen(
         modifier = modifier
             .background(backgroundColor)
             .pointerInput(Unit) {
-            detectTapGestures(
-                onTap = { onAction(ChapterReaderAction.OnScreenClicked) }
-            )
-        }
+                detectTapGestures(
+                    onTap = { onAction(ChapterReaderAction.OnScreenClicked) }
+                )
+            }
     ) {
         // Content
         Column(
@@ -124,13 +125,27 @@ fun ChapterReaderScreen(
             )
 
 
-            Text(
-                text = state.chapter.content,
-                color = textColor,
+            WordHighlightText(
+                fullText = state.chapter.content,
+                onWordClick = { word -> println("ChapterReaderScreen | Word clicked: \"$word\"") },
+                highlightWords = mapOf(
+                    "Wang" to Color(0xFF8E44AD),
+                    "palavras" to Color(0xFF8E44AD),
+                    "Lin" to Color(0xFF3498DB),
+                    "de" to Color(0xFF27AE60)
+                ),
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
                 fontFamily = state.readerFont.toFontFamily()
             )
+
+//            Text(
+//                text = state.chapter.content,
+//                color = textColor,
+//                fontSize = state.fontSize.sp,
+//                letterSpacing = 1.4.sp,
+//                fontFamily = state.readerFont.toFontFamily()
+//            )
         }
 
         // Reading progress bar
@@ -182,7 +197,13 @@ fun ChapterReaderScreen(
         ) {
             ReaderChaptersList(
                 state = state,
-                onChapterClick = { chapterId -> onAction(ChapterReaderAction.OnChapterClicked(chapterId)) }
+                onChapterClick = { chapterId ->
+                    onAction(
+                        ChapterReaderAction.OnChapterClicked(
+                            chapterId
+                        )
+                    )
+                }
             )
         }
     }
