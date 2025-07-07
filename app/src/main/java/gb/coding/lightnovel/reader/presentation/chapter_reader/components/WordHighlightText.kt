@@ -11,19 +11,27 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
+import gb.coding.lightnovel.core.domain.model.WordKnowledge
+import gb.coding.lightnovel.core.domain.model.getBackgroundColor
+import gb.coding.lightnovel.core.domain.model.getTextColor
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 import kotlin.text.Regex
 
 @Composable
 fun WordHighlightText(
     fullText: String,
-    highlightWords: Map<String, Color>,
+    color: Color = Color.Unspecified,
+    highlightWords: List<WordKnowledge>,
     onWordClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     fontFamily: FontFamily? = null,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
 ) {
+    // Map word to level for fast lookup
+    val wordToLevel = highlightWords.associateBy { it.word }
+
     val annotatedString = buildAnnotatedString {
         val wordRegex = Regex("""\b\p{L}+\b""")
         var lastIndex = 0
@@ -33,20 +41,24 @@ fun WordHighlightText(
             val start = match.range.first
             val end = match.range.last + 1
 
-            // Add any text between the last match and this one (spaces, punctuation, etc.)
             if (start > lastIndex) {
                 append(fullText.substring(lastIndex, start))
             }
 
-            // Check if the word should be highlighted
-            val highlightColor = highlightWords.entries.find { word.contains(it.key) }?.value
+            // Lookup level, default to NEW
+            val knowledgeLevel = wordToLevel[word]?.level ?: KnowledgeLevel.NEW
 
             pushStringAnnotation(tag = "WORD", annotation = word)
-            if (highlightColor != null) {
-                withStyle(SpanStyle(background = highlightColor, color = Color.Black)) {
+
+            val bgColor = knowledgeLevel.getBackgroundColor()
+            val textColor = knowledgeLevel.getTextColor()
+
+            if (bgColor != null) {
+                withStyle(SpanStyle(background = bgColor, color = textColor)) {
                     append(word)
                 }
             } else {
+                // No background, default color
                 append(word)
             }
             pop()
@@ -54,7 +66,6 @@ fun WordHighlightText(
             lastIndex = end
         }
 
-        // Add any remaining text after the last word
         if (lastIndex < fullText.length) {
             append(fullText.substring(lastIndex))
         }
@@ -64,6 +75,7 @@ fun WordHighlightText(
         text = annotatedString,
         modifier = modifier,
         style = TextStyle(
+            color = color,
             fontSize = fontSize,
             letterSpacing = letterSpacing,
             fontFamily = fontFamily,
@@ -76,6 +88,7 @@ fun WordHighlightText(
         },
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -98,7 +111,7 @@ private fun UnderlineColoredTextPreview() {
         WordHighlightText(
             fullText = text,
             onWordClick = {},
-            highlightWords = highlights,
+            highlightWords = emptyList(),
         )
     }
 }

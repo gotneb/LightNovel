@@ -127,13 +127,9 @@ fun ChapterReaderScreen(
 
             WordHighlightText(
                 fullText = state.chapter.content,
+                color = textColor,
                 onWordClick = { word -> println("ChapterReaderScreen | Word clicked: \"$word\"") },
-                highlightWords = mapOf(
-                    "Wang" to Color(0xFF8E44AD),
-                    "palavras" to Color(0xFF8E44AD),
-                    "Lin" to Color(0xFF3498DB),
-                    "de" to Color(0xFF27AE60)
-                ),
+                highlightWords = emptyList(),
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
                 fontFamily = state.readerFont.toFontFamily()
