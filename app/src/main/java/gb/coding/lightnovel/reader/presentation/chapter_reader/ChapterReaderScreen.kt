@@ -38,11 +38,11 @@ import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.core.domain.mapper.toFontFamily
 import gb.coding.lightnovel.core.domain.model.ReaderTheme
 import gb.coding.lightnovel.reader.data.mock.MockChapters
-import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordHighlightText
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordHighlightText
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
@@ -128,20 +128,13 @@ fun ChapterReaderScreen(
             WordHighlightText(
                 fullText = state.chapter.content,
                 color = textColor,
+                onScreenClick = { onAction(ChapterReaderAction.OnScreenClicked) },
                 onWordClick = { word -> println("ChapterReaderScreen | Word clicked: \"$word\"") },
                 highlightWords = emptyList(),
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
-                fontFamily = state.readerFont.toFontFamily()
+                fontFamily = state.readerFont.toFontFamily(),
             )
-
-//            Text(
-//                text = state.chapter.content,
-//                color = textColor,
-//                fontSize = state.fontSize.sp,
-//                letterSpacing = 1.4.sp,
-//                fontFamily = state.readerFont.toFontFamily()
-//            )
         }
 
         // Reading progress bar

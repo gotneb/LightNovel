@@ -1,10 +1,19 @@
 package gb.coding.lightnovel.reader.presentation.chapter_reader.components
 
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -16,7 +25,6 @@ import gb.coding.lightnovel.core.domain.model.WordKnowledge
 import gb.coding.lightnovel.core.domain.model.getBackgroundColor
 import gb.coding.lightnovel.core.domain.model.getTextColor
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
-import kotlin.text.Regex
 
 @Composable
 fun WordHighlightText(
@@ -24,69 +32,82 @@ fun WordHighlightText(
     color: Color = Color.Unspecified,
     highlightWords: List<WordKnowledge>,
     onWordClick: (String) -> Unit,
+    onScreenClick: () -> Unit,
     modifier: Modifier = Modifier,
     fontFamily: FontFamily? = null,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
 ) {
-    // Map word to level for fast lookup
+    val darkTheme = isSystemInDarkTheme()
     val wordToLevel = highlightWords.associateBy { it.word }
 
-    val annotatedString = buildAnnotatedString {
-        val wordRegex = Regex("""\b\p{L}+\b""")
-        var lastIndex = 0
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-        for (match in wordRegex.findAll(fullText)) {
-            val word = match.value
-            val start = match.range.first
-            val end = match.range.last + 1
+    val annotatedString = remember(fullText, highlightWords, darkTheme) {
+        buildAnnotatedString {
+            val wordRegex = Regex("""\b\p{L}+\b""")
+            var lastIndex = 0
 
-            if (start > lastIndex) {
-                append(fullText.substring(lastIndex, start))
-            }
+            for (match in wordRegex.findAll(fullText)) {
+                val word = match.value
+                val start = match.range.first
+                val end = match.range.last + 1
 
-            // Lookup level, default to NEW
-            val knowledgeLevel = wordToLevel[word]?.level ?: KnowledgeLevel.NEW
+                if (start > lastIndex) {
+                    append(fullText.substring(lastIndex, start))
+                }
 
-            pushStringAnnotation(tag = "WORD", annotation = word)
+                val knowledgeLevel = wordToLevel[word]?.level ?: KnowledgeLevel.NEW
+                val bgColor = knowledgeLevel.getBackgroundColor(darkTheme)
+                val textColor = knowledgeLevel.getTextColor(darkTheme)
 
-            val bgColor = knowledgeLevel.getBackgroundColor()
-            val textColor = knowledgeLevel.getTextColor()
+                pushStringAnnotation(tag = "WORD", annotation = word)
 
-            if (bgColor != null) {
-                withStyle(SpanStyle(background = bgColor, color = textColor)) {
+                if (bgColor != null) {
+                    withStyle(SpanStyle(background = bgColor, color = textColor)) {
+                        append(word)
+                    }
+                } else {
                     append(word)
                 }
-            } else {
-                // No background, default color
-                append(word)
+
+                pop()
+                lastIndex = end
             }
-            pop()
 
-            lastIndex = end
-        }
-
-        if (lastIndex < fullText.length) {
-            append(fullText.substring(lastIndex))
+            if (lastIndex < fullText.length) {
+                append(fullText.substring(lastIndex))
+            }
         }
     }
 
-    ClickableText(
-        text = annotatedString,
-        modifier = modifier,
-        style = TextStyle(
-            color = color,
-            fontSize = fontSize,
-            letterSpacing = letterSpacing,
-            fontFamily = fontFamily,
-        ),
-        onClick = { offset ->
-            annotatedString.getStringAnnotations("WORD", offset, offset)
-                .firstOrNull()?.let { annotation ->
-                    onWordClick(annotation.item)
+    Box(
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures { offset ->
+                    textLayoutResult?.let { layout ->
+                        val position = layout.getOffsetForPosition(offset)
+                        val annotation = annotatedString.getStringAnnotations("WORD", position, position).firstOrNull()
+                        if (annotation != null) {
+                            onWordClick(annotation.item)
+                        } else {
+                            onScreenClick()
+                        }
+                    }
                 }
-        },
-    )
+            }
+    ) {
+        Text(
+            text = annotatedString,
+            style = TextStyle(
+                color = color,
+                fontSize = fontSize,
+                letterSpacing = letterSpacing,
+                fontFamily = fontFamily,
+            ),
+            onTextLayout = { textLayoutResult = it }
+        )
+    }
 }
 
 
@@ -100,17 +121,10 @@ private fun UnderlineColoredTextPreview() {
         Uma grande quantidade de energia espiritual foi transferida dos dez fragmentos da alma para Wang Lin.
     """.trimIndent()
 
-        val highlights = mapOf(
-            "Wang" to Color(0xFFD1C4E9),     // purple
-            "palavras" to Color(0xFFF8BBD0), // pink
-            "de" to Color(0xFFB2EBF2),       // teal
-            "grande" to Color(0xFFC8E6C9),   // light green
-            "dez" to Color(0xFFFFF59D)       // yellow
-        )
-
         WordHighlightText(
             fullText = text,
             onWordClick = {},
+            onScreenClick = {},
             highlightWords = emptyList(),
         )
     }
