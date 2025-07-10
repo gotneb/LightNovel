@@ -15,6 +15,7 @@ This app is being developed using **Kotlin**, **Jetpack Compose**, and follows *
 - ✅ Persist bookmarks locally using **Room**
 - ✅ Fetch content dynamically from custom API
 - ✅ Language support (`en`, `pt-BR`, `ja`, `de`)
+- ✅ Highlight individual words in chapter text based on learning progress
 
 ## 🧱 Tech Stack
 
