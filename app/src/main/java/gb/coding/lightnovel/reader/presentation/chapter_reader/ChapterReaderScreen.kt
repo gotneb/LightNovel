@@ -42,6 +42,7 @@ import gb.coding.lightnovel.reader.presentation.chapter_reader.components.Reader
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordHighlightText
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
@@ -86,10 +87,10 @@ fun ChapterReaderScreen(
         modifier = modifier
             .background(backgroundColor)
             .pointerInput(Unit) {
-            detectTapGestures(
-                onTap = { onAction(ChapterReaderAction.OnScreenClicked) }
-            )
-        }
+                detectTapGestures(
+                    onTap = { onAction(ChapterReaderAction.OnScreenClicked) }
+                )
+            }
     ) {
         // Content
         Column(
@@ -124,12 +125,15 @@ fun ChapterReaderScreen(
             )
 
 
-            Text(
-                text = state.chapter.content,
+            WordHighlightText(
+                fullText = state.chapter.content,
                 color = textColor,
+                onScreenClick = { onAction(ChapterReaderAction.OnScreenClicked) },
+                onWordClick = { word -> println("ChapterReaderScreen | Word clicked: \"$word\"") },
+                highlightWords = emptyList(),
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
-                fontFamily = state.readerFont.toFontFamily()
+                fontFamily = state.readerFont.toFontFamily(),
             )
         }
 
@@ -182,7 +186,13 @@ fun ChapterReaderScreen(
         ) {
             ReaderChaptersList(
                 state = state,
-                onChapterClick = { chapterId -> onAction(ChapterReaderAction.OnChapterClicked(chapterId)) }
+                onChapterClick = { chapterId ->
+                    onAction(
+                        ChapterReaderAction.OnChapterClicked(
+                            chapterId
+                        )
+                    )
+                }
             )
         }
     }
