@@ -14,6 +14,11 @@ sealed interface ChapterReaderAction {
     data class OnFontSelected(val fontFamily: ReaderFont): ChapterReaderAction
     data class OnThemeSelected(val theme: ReaderTheme): ChapterReaderAction
 
+    data class OnWordClicked(val word: String): ChapterReaderAction
+    data object OnDismissWordContentDetail : ChapterReaderAction
+
+    data class OnWordKnowledgeLevelClicked(val level: Int): ChapterReaderAction
+
     data object OnSettingsClicked: ChapterReaderAction
 
     data class OnChapterClicked(val chapterId: String): ChapterReaderAction

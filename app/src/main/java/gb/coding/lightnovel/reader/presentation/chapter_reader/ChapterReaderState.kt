@@ -12,9 +12,11 @@ data class ChapterReaderState(
     val fontSize: Float = 16f,
     val readerFont: ReaderFont = ReaderFont.SourceSerif4,
     val readerTheme: ReaderTheme = ReaderTheme.Light,
+    val wordClicked: String = "[NULL]",
 
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,
+    val showModalBottomWord: Boolean = false,
 
     val chapterList: List<Chapter> = emptyList(),
     val currentChapterIndex: Int = -1,

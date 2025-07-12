@@ -3,6 +3,7 @@ package gb.coding.lightnovel.reader.presentation.chapter_reader
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
@@ -95,6 +96,27 @@ class ChapterReaderViewModel(
             is ChapterReaderAction.OnThemeSelected -> {
                 println("ChapterReaderViewModel | OnThemeSelected | Theme: ${action.theme}")
                 _state.value = _state.value.copy(readerTheme = action.theme)
+            }
+
+            is ChapterReaderAction.OnWordClicked -> {
+                println("ChapterReaderViewModel | OnWordClicked | Word: \"${action.word}\"")
+                _state.value = _state.value.copy(
+                    wordClicked = action.word,
+                    showModalBottomWord = true,
+                    showModalBottomSettings = false,
+                    showModalBottomChaptersList = false,
+                )
+            }
+            ChapterReaderAction.OnDismissWordContentDetail -> {
+                println("ChapterReaderViewModel | OnDismissWordContentDetail")
+                _state.value = _state.value.copy(
+                    showModalBottomWord = false,
+                )
+            }
+
+            is ChapterReaderAction.OnWordKnowledgeLevelClicked -> {
+                val level = KnowledgeLevel.fromId(action.level)
+                println("ChapterReaderViewModel | OnWordKnowledgeLevelClicked | Level: ${level.name}")
             }
 
             ChapterReaderAction.OnReturnClicked -> {

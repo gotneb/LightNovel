@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -42,6 +44,7 @@ import gb.coding.lightnovel.reader.presentation.chapter_reader.components.Reader
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderModalSettings
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderTopBar
+import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordDetailContent
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.WordHighlightText
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
@@ -129,7 +132,7 @@ fun ChapterReaderScreen(
                 fullText = state.chapter.content,
                 color = textColor,
                 onScreenClick = { onAction(ChapterReaderAction.OnScreenClicked) },
-                onWordClick = { word -> println("ChapterReaderScreen | Word clicked: \"$word\"") },
+                onWordClick = { onAction(ChapterReaderAction.OnWordClicked(it)) },
                 highlightWords = emptyList(),
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
@@ -209,6 +212,25 @@ fun ChapterReaderScreen(
                 onFontSizeChange = { onAction(ChapterReaderAction.OnFontSizeChanged(it)) },
                 onFontSelected = { onAction(ChapterReaderAction.OnFontSelected(it)) },
                 onThemeSelected = { onAction(ChapterReaderAction.OnThemeSelected(it)) }
+            )
+        }
+    }
+
+    // TODO: There must be a better way to do this
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val maxHeight = screenHeight * 0.8f
+
+    if (state.showModalBottomWord) {
+        ModalBottomSheet(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = { onAction(ChapterReaderAction.OnDismissWordContentDetail) }
+        ) {
+            WordDetailContent(
+                word = state.wordClicked,
+                onWordLevelChanged = { onAction(ChapterReaderAction.OnWordKnowledgeLevelClicked(it)) },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .heightIn(maxHeight)
             )
         }
     }
