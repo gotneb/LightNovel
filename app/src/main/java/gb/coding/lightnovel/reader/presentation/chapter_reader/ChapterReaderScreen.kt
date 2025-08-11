@@ -227,7 +227,7 @@ fun ChapterReaderScreen(
         ) {
             WordDetailContent(
                 word = state.wordClicked,
-                onWordLevelChanged = { onAction(ChapterReaderAction.OnWordKnowledgeLevelClicked(it)) },
+                onWordLevelChanged = { onAction(ChapterReaderAction.OnWordKnowledgeLevelChanged(it)) },
                 modifier = Modifier
                     .padding(8.dp)
                     .heightIn(maxHeight)

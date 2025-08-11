@@ -22,16 +22,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
+import gb.coding.lightnovel.core.domain.model.LanguageCode
+import gb.coding.lightnovel.core.domain.model.WordKnowledge
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
 fun WordDetailContent(
-    word: String,
+    word: WordKnowledge?,
     onWordLevelChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Just for demo purposes
-    var selectedLevel by remember { mutableIntStateOf(3) }
     var translationText by remember { mutableStateOf("") }
 
     Column(
@@ -40,7 +42,7 @@ fun WordDetailContent(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                text = word,
+                text = word?.word ?: "Word",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -68,10 +70,8 @@ fun WordDetailContent(
         }
 
         KnowledgeLevelSelector(
-            selectedLevel = selectedLevel,
+            selectedLevel = word?.level?.id ?: 1,
             onLevelSelected = { level ->
-                selectedLevel = level
-                // Just for demo purposes
                 onWordLevelChanged(level)
             }
         )
@@ -87,12 +87,21 @@ fun WordDetailContent(
     }
 }
 
+internal val wordKnowledgePreview = WordKnowledge(
+    word = "Zimmer",
+    translation = "Quarto",
+    imageUrl = "",
+    level = KnowledgeLevel.IGNORE,
+    lastUpdated = System.currentTimeMillis(),
+    language = LanguageCode.GERMAN.code,
+)
+
 @Preview(showBackground = true)
 @Composable
 private fun WordDetailContentPreview() {
     LightNovelTheme {
         WordDetailContent(
-            word = "Zimmer",
+            word = wordKnowledgePreview,
             onWordLevelChanged = {},
             modifier = Modifier.padding(8.dp)
         )

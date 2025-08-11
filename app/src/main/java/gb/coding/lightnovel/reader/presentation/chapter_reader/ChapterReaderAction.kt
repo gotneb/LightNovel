@@ -17,7 +17,7 @@ sealed interface ChapterReaderAction {
     data class OnWordClicked(val word: String): ChapterReaderAction
     data object OnDismissWordContentDetail : ChapterReaderAction
 
-    data class OnWordKnowledgeLevelClicked(val level: Int): ChapterReaderAction
+    data class OnWordKnowledgeLevelChanged(val level: Int): ChapterReaderAction
 
     data object OnSettingsClicked: ChapterReaderAction
 
