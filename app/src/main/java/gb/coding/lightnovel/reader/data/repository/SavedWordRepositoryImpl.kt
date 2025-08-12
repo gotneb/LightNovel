@@ -33,4 +33,11 @@ class SavedWordRepositoryImpl(
             )
         }
     }
+
+    override fun getAllWords(): Flow<List<WordKnowledge>> {
+        println("SavedWordRepositoryImpl | Getting all saved words.")
+        return savedWordDao.getAllWords().mapLatest { savedWords ->
+            savedWords.map { it.toWordKnowledge() }
+        }
+    }
 }

@@ -12,4 +12,8 @@ interface SavedWordDao {
 
     @Query("SELECT * FROM saved_words WHERE word = :word")
     fun getWord(word: String): Flow<SavedWord?>
+
+    @Query("SELECT * FROM saved_words")
+    fun getAllWords(): Flow<List<SavedWord>>
+
 }

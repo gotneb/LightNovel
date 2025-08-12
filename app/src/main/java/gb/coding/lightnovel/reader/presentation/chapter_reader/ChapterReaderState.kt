@@ -14,6 +14,7 @@ data class ChapterReaderState(
     val readerFont: ReaderFont = ReaderFont.SourceSerif4,
     val readerTheme: ReaderTheme = ReaderTheme.Light,
     val wordClicked: WordKnowledge? = null,
+    val savedWords: List<WordKnowledge> = emptyList(),
 
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,

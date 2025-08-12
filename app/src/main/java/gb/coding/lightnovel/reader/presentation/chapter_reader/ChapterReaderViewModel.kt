@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
 import androidx.lifecycle.SavedStateHandle
@@ -8,6 +10,7 @@ import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
 import gb.coding.lightnovel.reader.domain.repository.SavedWordRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +37,15 @@ class ChapterReaderViewModel(
     init {
         val chapterId: String = checkNotNull(savedStateHandle["chapterId"]) {
             println("ChapterReaderViewModel | init | Error getting chapterId from savedStateHandle")
+        }
+
+        viewModelScope.launch {
+            println("ChapterReaderViewModel | init | Loading saved words")
+            savedWordRepository
+                .getAllWords()
+                .collectLatest { words ->
+                    _state.value = _state.value.copy(savedWords = words)
+                }
         }
 
         viewModelScope.launch {

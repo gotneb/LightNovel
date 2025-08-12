@@ -7,4 +7,6 @@ interface SavedWordRepository {
     suspend fun addWord(word: WordKnowledge)
 
     suspend fun getWord(word: String): Flow<WordKnowledge>
+
+    fun getAllWords(): Flow<List<WordKnowledge>>
 }

@@ -38,7 +38,9 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.core.domain.mapper.toFontFamily
+import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
 import gb.coding.lightnovel.core.domain.model.ReaderTheme
+import gb.coding.lightnovel.core.domain.model.WordKnowledge
 import gb.coding.lightnovel.reader.data.mock.MockChapters
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderBottomBar
 import gb.coding.lightnovel.reader.presentation.chapter_reader.components.ReaderChaptersList
@@ -127,13 +129,12 @@ fun ChapterReaderScreen(
                     .padding(top = 4.dp, bottom = 32.dp)
             )
 
-
             WordHighlightText(
                 fullText = state.chapter.content,
                 color = textColor,
                 onScreenClick = { onAction(ChapterReaderAction.OnScreenClicked) },
                 onWordClick = { onAction(ChapterReaderAction.OnWordClicked(it)) },
-                highlightWords = emptyList(),
+                highlightWords = state.savedWords,
                 fontSize = state.fontSize.sp,
                 letterSpacing = 1.4.sp,
                 fontFamily = state.readerFont.toFontFamily(),
