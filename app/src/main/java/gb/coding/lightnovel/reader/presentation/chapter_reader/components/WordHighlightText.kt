@@ -24,6 +24,7 @@ import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
 import gb.coding.lightnovel.core.domain.model.WordKnowledge
 import gb.coding.lightnovel.core.domain.model.getBackgroundColor
 import gb.coding.lightnovel.core.domain.model.getTextColor
+import gb.coding.lightnovel.reader.data.local.SavedWord
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable

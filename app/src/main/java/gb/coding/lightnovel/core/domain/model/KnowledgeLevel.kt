@@ -3,12 +3,12 @@ package gb.coding.lightnovel.core.domain.model
 import androidx.compose.ui.graphics.Color
 
 enum class KnowledgeLevel(val id: Int, val label: String) {
-    IGNORE(1, "Ignore"),
-    NEW(2, "New"),
-    RECOGNIZED(3, "Recognized"),
-    FAMILIAR(4, "Familiar"),
-    LEARNED(5, "Learned"),
-    KNOWN(6, "Known");
+    IGNORE(0, "Ignore"),
+    NEW(1, "New"),
+    RECOGNIZED(2, "Recognized"),
+    FAMILIAR(3, "Familiar"),
+    LEARNED(4, "Learned"),
+    KNOWN(5, "Known");
 
     companion object {
         fun fromId(id: Int): KnowledgeLevel =

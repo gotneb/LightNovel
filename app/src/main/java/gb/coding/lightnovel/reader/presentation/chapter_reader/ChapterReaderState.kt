@@ -2,6 +2,7 @@ package gb.coding.lightnovel.reader.presentation.chapter_reader
 
 import gb.coding.lightnovel.core.domain.model.ReaderFont
 import gb.coding.lightnovel.core.domain.model.ReaderTheme
+import gb.coding.lightnovel.core.domain.model.WordKnowledge
 import gb.coding.lightnovel.reader.domain.models.Chapter
 
 data class ChapterReaderState(
@@ -12,9 +13,12 @@ data class ChapterReaderState(
     val fontSize: Float = 16f,
     val readerFont: ReaderFont = ReaderFont.SourceSerif4,
     val readerTheme: ReaderTheme = ReaderTheme.Light,
+    val wordClicked: WordKnowledge? = null,
+    val savedWords: List<WordKnowledge> = emptyList(),
 
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,
+    val showModalBottomWord: Boolean = false,
 
     val chapterList: List<Chapter> = emptyList(),
     val currentChapterIndex: Int = -1,
