@@ -1,24 +1,35 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package gb.coding.lightnovel.reader.presentation.chapter_reader
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
+import gb.coding.lightnovel.reader.domain.repository.SavedWordRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ChapterReaderViewModel(
     savedStateHandle: SavedStateHandle,
     private val novelRepository: NovelRepository,
+    private val savedWordRepository: SavedWordRepository,
 ) : ViewModel() {
 
     private val _events = Channel<ChapterReaderEvent>()
     val events = _events.receiveAsFlow()
+
+    private var wordCollectJob: Job? = null
 
     private val _state = MutableStateFlow(ChapterReaderState())
     val state = _state.asStateFlow()
@@ -26,6 +37,15 @@ class ChapterReaderViewModel(
     init {
         val chapterId: String = checkNotNull(savedStateHandle["chapterId"]) {
             println("ChapterReaderViewModel | init | Error getting chapterId from savedStateHandle")
+        }
+
+        viewModelScope.launch {
+            println("ChapterReaderViewModel | init | Loading saved words")
+            savedWordRepository
+                .getAllWords()
+                .collectLatest { words ->
+                    _state.value = _state.value.copy(savedWords = words)
+                }
         }
 
         viewModelScope.launch {
@@ -95,6 +115,44 @@ class ChapterReaderViewModel(
             is ChapterReaderAction.OnThemeSelected -> {
                 println("ChapterReaderViewModel | OnThemeSelected | Theme: ${action.theme}")
                 _state.value = _state.value.copy(readerTheme = action.theme)
+            }
+
+            is ChapterReaderAction.OnWordClicked -> {
+                println("ChapterReaderViewModel | OnWordClicked | Searching locally word: \"${action.word}\"")
+
+                // Cancels the previous job if it exists, so that way previously clicked words aren't collected and updated.
+                wordCollectJob?.cancel()
+
+                wordCollectJob = viewModelScope.launch {
+                    savedWordRepository.getWord(action.word)
+                        .collectLatest { word ->
+                            println("ChapterReaderViewModel | OnWordClicked | Updating wordClicked state for: \"${action.word}\"")
+                            _state.value = _state.value.copy(
+                                wordClicked = word,
+                                showModalBottomWord = true,
+                                showModalBottomSettings = false,
+                                showModalBottomChaptersList = false,
+                            )
+                        }
+                }
+            }
+            ChapterReaderAction.OnDismissWordContentDetail -> {
+                println("ChapterReaderViewModel | OnDismissWordContentDetail")
+                _state.value = _state.value.copy(
+                    showModalBottomWord = false,
+                )
+            }
+
+            is ChapterReaderAction.OnWordKnowledgeLevelChanged -> {
+                val level = KnowledgeLevel.fromId(action.level)
+
+                val word = _state.value.wordClicked?.copy(level = level)
+                if (word != null) {
+                    println("ChapterReaderViewModel | OnWordKnowledgeLevelClicked | Updating word: \"${word.word}\" to level: ${word.level.name} (${action.level})")
+                    viewModelScope.launch {
+                        savedWordRepository.addWord(word)
+                    }
+                }
             }
 
             ChapterReaderAction.OnReturnClicked -> {

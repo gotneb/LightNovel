@@ -5,8 +5,10 @@ import gb.coding.lightnovel.BuildConfig
 import gb.coding.lightnovel.reader.data.local.LightNovelDatabase
 import gb.coding.lightnovel.reader.data.repository.BookmarkedNovelRepositoryImpl
 import gb.coding.lightnovel.reader.data.repository.NovelRepositoryImpl
+import gb.coding.lightnovel.reader.data.repository.SavedWordRepositoryImpl
 import gb.coding.lightnovel.reader.domain.repository.BookmarkedNovelRepository
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
+import gb.coding.lightnovel.reader.domain.repository.SavedWordRepository
 import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
 import gb.coding.lightnovel.reader.presentation.library.LibraryViewModel
@@ -34,12 +36,16 @@ val appModule = module {
             context = androidContext().applicationContext,
             klass = LightNovelDatabase::class.java,
             name = "light_novel.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(true) // Can only do it before prod.
+            .build()
     }
     single { get<LightNovelDatabase>().bookmarkedNovelDao }
+    single { get<LightNovelDatabase>().savedWordDao }
 
     singleOf(::NovelRepositoryImpl).bind<NovelRepository>()
     singleOf(::BookmarkedNovelRepositoryImpl).bind<BookmarkedNovelRepository>()
+    singleOf(::SavedWordRepositoryImpl).bind<SavedWordRepository>()
 
     viewModelOf(::BrowseViewModel)
     viewModelOf(::NovelDetailViewModel)
