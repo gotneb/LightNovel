@@ -17,9 +17,10 @@ class UnsplashRepositoryImpl(
     override suspend fun searchImages(query: String): Result<List<String>, Error> {
         println("UnsplashRepositoryImpl | searchImages | Query: \"$query\"")
         return safeCall<ImageSearchResultsDto> {
-            httpClient.get(urlString = constructUrl("${BuildConfig.UNSPLASH_BASE_URL}/search/photos?client_id${BuildConfig.UNSPLASH_API_KEY}&query=$query"))
+            val url = "${BuildConfig.UNSPLASH_BASE_URL}/search/photos?client_id=${BuildConfig.UNSPLASH_API_KEY}&query=$query&per_page=20"
+            httpClient.get(urlString = constructUrl(url))
         }.map { response ->
-            response.results.map { it.urls.regular }
+            response.results.map { it.urls.thumb }
         }
     }
 }
