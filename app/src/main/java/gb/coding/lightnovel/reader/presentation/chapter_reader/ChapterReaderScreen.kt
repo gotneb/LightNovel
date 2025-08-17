@@ -229,6 +229,9 @@ fun ChapterReaderScreen(
             WordDetailContent(
                 word = state.wordClicked,
                 onWordLevelChanged = { onAction(ChapterReaderAction.OnWordKnowledgeLevelChanged(it)) },
+                onTranslationChange = { onAction(ChapterReaderAction.OnWordTranslationChanged(it)) },
+                onWordImageSelected = { onAction(ChapterReaderAction.OnWordImageSelected(it)) },
+                translationImages = state.translationRelatedImages,
                 modifier = Modifier
                     .padding(8.dp)
                     .heightIn(maxHeight)

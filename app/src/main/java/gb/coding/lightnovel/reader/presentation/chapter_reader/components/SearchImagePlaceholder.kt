@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.R
@@ -59,13 +60,13 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.add_photo_alternate),
                 contentDescription = "Search image",
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = borderColor,
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Search an image for this word...",
-                color = MaterialTheme.colorScheme.onBackground,
+                text = "Put a translation to search images...",
+                color = borderColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
@@ -74,12 +75,14 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchImagePlaceholderPreview() {
     LightNovelTheme {
         SearchImagePlaceholder(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .padding(8.dp)
         )
     }
 }
