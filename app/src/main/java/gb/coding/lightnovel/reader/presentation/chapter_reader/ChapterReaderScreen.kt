@@ -231,6 +231,7 @@ fun ChapterReaderScreen(
                 onWordLevelChanged = { onAction(ChapterReaderAction.OnWordKnowledgeLevelChanged(it)) },
                 onTranslationChange = { onAction(ChapterReaderAction.OnWordTranslationChanged(it)) },
                 onWordImageSelected = { onAction(ChapterReaderAction.OnWordImageSelected(it)) },
+                onRemovePhoto = { onAction(ChapterReaderAction.OnWordImageSelected(""))},
                 translationImages = state.translationRelatedImages,
                 modifier = Modifier
                     .padding(8.dp)
