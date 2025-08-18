@@ -33,7 +33,10 @@ import gb.coding.lightnovel.R
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
-fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
+fun SearchImagePlaceholder(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val borderColor = if (isSystemInDarkTheme()) Color(0xFF4A4A4A) else Color(0xFFD9D9D9)
 
     // Todo: use a better approach to get the screen height
@@ -53,19 +56,19 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
             )
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.background)
-            .clickable { /* No-op for now */ }
+            .clickable { onClick() }
             .padding(16.dp)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                painter = painterResource(R.drawable.add_photo_alternate),
+                painter = painterResource(R.drawable.image_search),
                 contentDescription = "Search image",
                 tint = borderColor,
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Put a translation to search images...",
+                text = "Search for an image...",
                 color = borderColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -80,6 +83,7 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
 private fun SearchImagePlaceholderPreview() {
     LightNovelTheme {
         SearchImagePlaceholder(
+            onClick = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .padding(8.dp)

@@ -198,7 +198,6 @@ class ChapterReaderViewModel(
                     println("ChapterReaderViewModel | OnWordTranslationChanged | Updating word: \"${word!!.word}\" to translation: \"${word.translation}\"")
                     savedWordRepository.updateWord(word)
 
-                    println("ChapterReaderViewModel | OnWordTranslationChanged | Searching images for: \"${word.word}\"")
                     _state.value.copy(isLoadingTranslationsImages = true)
                     imageRepository.searchImages(word.translation)
                         .onSuccess { images ->

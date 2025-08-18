@@ -1,7 +1,9 @@
 package gb.coding.lightnovel.reader.presentation.chapter_reader.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -123,6 +125,7 @@ fun WordDetailContent(
             }
         )
 
+        val borderColor = if (isSystemInDarkTheme()) Color(0xFF4A4A4A) else Color(0xFFD9D9D9)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 text = "Image",
@@ -131,23 +134,22 @@ fun WordDetailContent(
                 fontWeight = FontWeight.SemiBold,
             )
             when {
-                word?.imageUrl == null || word.imageUrl.isEmpty() -> {
-                    SearchImagePlaceholder()
-                }
-                isLoadingImages -> {
-                    CircularProgressIndicator()
-                }
-                word.imageUrl.isNotBlank() -> {
+                word?.imageUrl?.isNotEmpty()!! -> {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f)
+                            .border(
+                                width = 1.dp,
+                                color = borderColor,
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .clip(RoundedCornerShape(8.dp))
                     ) {
                         AsyncImage(
                             model = word.imageUrl,
                             contentDescription = "Photo of ${word.translation}",
-                            contentScale = ContentScale.Crop,
+                            contentScale = ContentScale.Fit,
                             modifier = Modifier.fillMaxSize()
                         )
 
@@ -169,7 +171,12 @@ fun WordDetailContent(
                         )
                     }
                 }
-                else -> {
+                isLoadingImages -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                translationImages.isNotEmpty() -> {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -188,6 +195,11 @@ fun WordDetailContent(
                                     .clickable { onWordImageSelected(imageUrl) })
                         }
                     }
+                }
+                translation.isNotEmpty() -> {
+                    SearchImagePlaceholder(onClick = {
+                        onTranslationChange(translation)
+                    })
                 }
             }
 
@@ -211,6 +223,7 @@ private fun WordDetailContentPreview() {
         WordDetailContent(
             word = wordKnowledgePreview,
             translationImages = emptyList(),
+            isLoadingImages = true,
             onWordLevelChanged = {},
             onTranslationChange = {},
             onWordImageSelected = {},
