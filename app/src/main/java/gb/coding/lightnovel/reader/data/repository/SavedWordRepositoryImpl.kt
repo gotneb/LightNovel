@@ -20,6 +20,11 @@ class SavedWordRepositoryImpl(
         savedWordDao.upsertWord(word.toSavedWord())
     }
 
+    override suspend fun updateWord(word: WordKnowledge) {
+        println("SavedWordRepositoryImpl | Updating word \"${word.word}\" in saved words. (\"${word.language}\")")
+        savedWordDao.upsertWord(word.toSavedWord())
+    }
+
     override suspend fun getWord(word: String): Flow<WordKnowledge> {
         println("SavedWordRepositoryImpl | Getting word \"$word\" from saved words.")
         return savedWordDao.getWord(word).mapLatest { savedWord ->

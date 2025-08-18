@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import gb.coding.lightnovel.core.domain.model.KnowledgeLevel
 import gb.coding.lightnovel.core.domain.util.onError
 import gb.coding.lightnovel.core.domain.util.onSuccess
+import gb.coding.lightnovel.reader.domain.repository.ImageRepository
 import gb.coding.lightnovel.reader.domain.repository.NovelRepository
 import gb.coding.lightnovel.reader.domain.repository.SavedWordRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +17,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -24,6 +24,7 @@ class ChapterReaderViewModel(
     savedStateHandle: SavedStateHandle,
     private val novelRepository: NovelRepository,
     private val savedWordRepository: SavedWordRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel() {
 
     private val _events = Channel<ChapterReaderEvent>()
@@ -132,6 +133,7 @@ class ChapterReaderViewModel(
                                 showModalBottomWord = true,
                                 showModalBottomSettings = false,
                                 showModalBottomChaptersList = false,
+                                translationRelatedImages = if (_state.value.wordClicked == word) _state.value.translationRelatedImages else emptyList(),
                             )
                         }
                 }
@@ -188,6 +190,37 @@ class ChapterReaderViewModel(
             ChapterReaderAction.OnDismissChaptersListClicked -> {
                 println("ChapterReaderViewModel | OnDismissChaptersListClicked")
                 _state.value = _state.value.copy(showModalBottomChaptersList = false)
+            }
+
+            is ChapterReaderAction.OnWordTranslationChanged -> {
+                val word = _state.value.wordClicked?.copy(translation = action.translation)
+                viewModelScope.launch {
+                    println("ChapterReaderViewModel | OnWordTranslationChanged | Updating word: \"${word!!.word}\" to translation: \"${word.translation}\"")
+                    savedWordRepository.updateWord(word)
+
+                    _state.value.copy(isLoadingTranslationsImages = true)
+                    imageRepository.searchImages(word.translation)
+                        .onSuccess { images ->
+                            println("ChapterReaderViewModel | OnWordTranslationChanged | Found ${images.size} images for: \"${word.word}\"")
+                            _state.value = _state.value.copy(
+                                translationRelatedImages = images,
+                                isLoadingTranslationsImages = false,
+                            )
+                        }
+                        .onError { error ->
+                            println("ChapterReaderViewModel | OnWordTranslationChanged | Error searching images for: \"${word.word}\"\nError: $error")
+                            _state.value.copy(isLoadingTranslationsImages = false)
+                        }
+                }
+            }
+
+            is ChapterReaderAction.OnWordImageSelected -> {
+                println("ChapterReaderViewModel | OnWordImageSelected | Image: ${action.imageUrl}")
+                val word = _state.value.wordClicked?.copy(imageUrl = action.imageUrl)
+                _state.value = _state.value.copy(wordClicked = word)
+                viewModelScope.launch {
+                    savedWordRepository.updateWord(word!!)
+                }
             }
         }
     }

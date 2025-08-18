@@ -18,6 +18,8 @@ val localProperties = Properties().apply {
  */
 val SUPABASE_URL = localProperties["SUPABASE_URL"] as String
 val SUPABASE_ANON_KEY = localProperties["SUPABASE_ANON_KEY"] as String
+val UNSPLASH_BASE_URL = localProperties["UNSPLASH_BASE_URL"] as String
+val UNSPLASH_API_KEY = localProperties["UNSPLASH_API_KEY"] as String
 
 android {
     namespace = "gb.coding.lightnovel"
@@ -39,6 +41,8 @@ android {
         debug {
             buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
             buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
+            buildConfigField("String", "UNSPLASH_BASE_URL", UNSPLASH_BASE_URL)
+            buildConfigField("String", "UNSPLASH_API_KEY", UNSPLASH_API_KEY)
         }
         release {
             isMinifyEnabled = false
@@ -49,6 +53,8 @@ android {
 
             buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
             buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
+            buildConfigField("String", "UNSPLASH_BASE_URL", UNSPLASH_BASE_URL)
+            buildConfigField("String", "UNSPLASH_API_KEY", UNSPLASH_API_KEY)
         }
     }
     compileOptions {

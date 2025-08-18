@@ -26,13 +26,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gb.coding.lightnovel.R
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
 
 @Composable
-fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
+fun SearchImagePlaceholder(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val borderColor = if (isSystemInDarkTheme()) Color(0xFF4A4A4A) else Color(0xFFD9D9D9)
 
     // Todo: use a better approach to get the screen height
@@ -52,20 +56,20 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
             )
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.background)
-            .clickable { /* No-op for now */ }
+            .clickable { onClick() }
             .padding(16.dp)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                painter = painterResource(R.drawable.add_photo_alternate),
+                painter = painterResource(R.drawable.image_search),
                 contentDescription = "Search image",
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = borderColor,
                 modifier = Modifier.size(100.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Search an image for this word...",
-                color = MaterialTheme.colorScheme.onBackground,
+                text = "Search for an image...",
+                color = borderColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
@@ -74,12 +78,15 @@ fun SearchImagePlaceholder(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchImagePlaceholderPreview() {
     LightNovelTheme {
         SearchImagePlaceholder(
-            modifier = Modifier.padding(8.dp)
+            onClick = {},
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .padding(8.dp)
         )
     }
 }

@@ -16,6 +16,9 @@ data class ChapterReaderState(
     val wordClicked: WordKnowledge? = null,
     val savedWords: List<WordKnowledge> = emptyList(),
 
+    val translationRelatedImages: List<String> = emptyList(),
+    val isLoadingTranslationsImages: Boolean = false,
+
     val showModalBottomSettings: Boolean = false,
     val showModalBottomChaptersList: Boolean = false,
     val showModalBottomWord: Boolean = false,
