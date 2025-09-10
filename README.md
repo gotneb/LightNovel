@@ -1,13 +1,13 @@
-# Light Novel Reader (WIP) 📚
+# Light Novel Reader (WIP) 
 
 An open-source Android app for reading and managing light novels.
 
 This app is being developed using **Kotlin**, **Jetpack Compose**, and follows **MVI architecture** with clean principles.
 
-> 🔧 Status: Actively under development  
-> 📌 MVP Focus: Online-first reading experience and bookmarking
+> Status: Actively under development  
+> MVP Focus: Online-first reading experience and bookmarking
 
-## ✨ Features (Current MVP)
+## Features (Current MVP)
 
 - ✅ Browse novel details (title, author, cover, description)
 - ✅ View chapters list and open chapter reader
@@ -17,7 +17,7 @@ This app is being developed using **Kotlin**, **Jetpack Compose**, and follows *
 - ✅ Language support (`en`, `pt-BR`, `ja`, `de`)
 - ✅ Highlight individual words in chapter text based on learning progress
 
-## 🧱 Tech Stack
+## Tech Stack
 
 | Layer       | Technology             |
 |-------------|-------------------------|
@@ -28,7 +28,7 @@ This app is being developed using **Kotlin**, **Jetpack Compose**, and follows *
 | DI          | Koin                    |
 | Architecture| Clean (Domain/Data/UI)  |
 
-## 🚀 Getting Started
+## Getting Started
 
 1. Clone the repo
 2. Open in Android Studio
@@ -38,11 +38,11 @@ This app is being developed using **Kotlin**, **Jetpack Compose**, and follows *
    - `SUPABASE_ANON_KEY=your-anon-key`
 5. Run on an emulator or device
 
-## 📌 Note
+## Note
 
 This is a personal/experimental project. Contributions are welcome, but the codebase is evolving quickly.
 
-## 📄 License
+## License
 
 Licensed under the [MIT License](./LICENSE).
 
