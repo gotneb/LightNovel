@@ -20,7 +20,7 @@ class UnsplashRepositoryImpl(
             val url = "${BuildConfig.UNSPLASH_BASE_URL}/search/photos?client_id=${BuildConfig.UNSPLASH_API_KEY}&query=$query&per_page=20"
             httpClient.get(urlString = constructUrl(url))
         }.map { response ->
-            response.results.map { it.urls.thumb }
+            response.results.map { it.urls.regular }
         }
     }
 }

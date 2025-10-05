@@ -16,12 +16,13 @@ class SavedWordRepositoryImpl(
     private val savedWordDao: SavedWordDao
 ) : SavedWordRepository {
     override suspend fun addWord(word: WordKnowledge) {
-        println("SavedWordRepositoryImpl | Adding word \"${word.word}\" to saved words. (\"${word.language}\")")
+        println("SavedWordRepositoryImpl | Adding word \"${word.word}\" to saved words. (\"${word.language}\")\nWord: $word")
         savedWordDao.upsertWord(word.toSavedWord())
     }
 
     override suspend fun updateWord(word: WordKnowledge) {
-        println("SavedWordRepositoryImpl | Updating word \"${word.word}\" in saved words. (\"${word.language}\")")
+        println("SavedWordRepositoryImpl | updateWord | Updating word \"${word.word}\" in saved words. (\"${word.language}\")\nWord: $word")
+        println("SavedWordRepositoryImpl | updateWord | ")
         savedWordDao.upsertWord(word.toSavedWord())
     }
 
