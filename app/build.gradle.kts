@@ -1,9 +1,25 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.devtools.ksp")
 }
+
+val localProperties = Properties().apply {
+    load(FileInputStream(File("local.properties")))
+}
+
+/*
+ * FIX: The keys can be reverse engineered, but for now this is a good approach.
+ */
+val SUPABASE_URL = localProperties["SUPABASE_URL"] as String
+val SUPABASE_ANON_KEY = localProperties["SUPABASE_ANON_KEY"] as String
+val UNSPLASH_BASE_URL = localProperties["UNSPLASH_BASE_URL"] as String
+val UNSPLASH_API_KEY = localProperties["UNSPLASH_API_KEY"] as String
 
 android {
     namespace = "gb.coding.lightnovel"
@@ -22,12 +38,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
+            buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
+            buildConfigField("String", "UNSPLASH_BASE_URL", UNSPLASH_BASE_URL)
+            buildConfigField("String", "UNSPLASH_API_KEY", UNSPLASH_API_KEY)
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField("String", "SUPABASE_URL", SUPABASE_URL)
+            buildConfigField("String", "SUPABASE_ANON_KEY", SUPABASE_ANON_KEY)
+            buildConfigField("String", "UNSPLASH_BASE_URL", UNSPLASH_BASE_URL)
+            buildConfigField("String", "UNSPLASH_API_KEY", UNSPLASH_API_KEY)
         }
     }
     compileOptions {
@@ -38,13 +65,27 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
 
 dependencies {
 
-    implementation(libs.bundles.compose)
+    with (libs) {
+        implementation(platform(supabase.bom))
+        implementation(bundles.supabase)
+
+        implementation(bundles.compose)
+        implementation(bundles.coil)
+        implementation(bundles.ktor)
+        implementation(bundles.koin)
+    }
+
+    val room_version = "2.7.2"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

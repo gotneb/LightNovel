@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
@@ -18,7 +19,7 @@ fun TagChip(
 ) {
     Surface(
         shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        border = BorderStroke(1.dp, Color(0xFF65558F)),
     ) {
         Text(
             text = text,

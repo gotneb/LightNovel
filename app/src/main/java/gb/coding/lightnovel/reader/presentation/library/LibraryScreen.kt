@@ -41,8 +41,6 @@ fun LibraryScreen(
     onAction: (LibraryAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var searchText by rememberSaveable { mutableStateOf("") }
-
     val numberColumns = 3
 
     LazyVerticalGrid(
@@ -61,21 +59,22 @@ fun LibraryScreen(
             )
         }
         
-        if (state.novels.isNotEmpty()) {
+        if (state.filteredNovels.isNotEmpty()) {
             item(span = { GridItemSpan(numberColumns) }) {
                 SearchBar(
-                    text = searchText,
-                    onTextChange = { searchText = it },
+                    text = state.searchQuery,
+                    onTextChange = { onAction(LibraryAction.OnSearchQueryChanged(it)) },
                     modifier = Modifier
                         .padding(vertical = 12.dp)
                         .fillMaxWidth(),
                     placeholder = { Text("Pesquisar na biblioteca...") },
+                    onSearch = { }
                 )
             }
 
-            items(state.novels) { novel ->
+            items(state.filteredNovels) { novel ->
                 LibraryNovelCard(
-                    novel = MockNovels.sample,
+                    novel = novel,
                     onClick = { onAction(LibraryAction.OnNovelClicked(it)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -127,7 +126,10 @@ fun LibraryScreen(
 private fun LibraryScreenPreview() {
     LightNovelTheme {
         LibraryScreen(
-            state = LibraryState(),
+            state = LibraryState(
+                novels = MockNovels.samples,
+                filteredNovels = MockNovels.samples,
+            ),
             onAction = {},
             modifier = Modifier.fillMaxSize()
         )

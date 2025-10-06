@@ -10,8 +10,8 @@ sealed class Route() {
     data object Browse : Route()
 
     @Serializable
-    data object NovelDetail : Route()
+    data class NovelDetail(val novelId: String) : Route()
 
     @Serializable
-    data object ChapterReader : Route()
+    data class ChapterReader(val chapterId: String) : Route()
 }

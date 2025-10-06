@@ -4,5 +4,6 @@ import gb.coding.lightnovel.reader.domain.models.Novel
 
 data class LibraryState(
     val novels: List<Novel> = emptyList(),
-    val searchText: String = "",
+    val filteredNovels: List<Novel> = emptyList(),
+    val searchQuery: String = "",
 )

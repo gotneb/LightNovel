@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.1"
+agp = "8.12.0"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -9,15 +9,37 @@ lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2025.05.01"
 navigationCompose = "2.9.0"
+coilCompose = "3.0.0-rc01"
+bom = "3.1.4"
+ktor = "3.1.3"
+koin = "3.5.6"
 
 [libraries]
 # Lifecycle
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 
+# Coil
+coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil3-ktor = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+
 # Navigation
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
+
+# Supabase
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
+postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
+
+# Ktor
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+
+# Koin
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -52,4 +74,20 @@ compose = [
     "androidx-navigation-compose",
     "androidx-navigation-ui-ktx"
 ]
-
+coil = [
+    "coil3-compose",
+    "coil3-ktor"
+]
+supabase = [
+    "postgrest-kt"
+]
+ktor = [
+    "ktor-client-content-negotiation",
+    "ktor-client-cio",
+    "ktor-client-core",
+]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-androidx-compose"
+]

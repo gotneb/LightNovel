@@ -1,13 +1,30 @@
 package gb.coding.lightnovel.reader.data.mock
 
 import gb.coding.lightnovel.reader.domain.models.Chapter
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 
 object MockChapters {
+    val mockDate: Instant = Instant.parse("2023-08-20T00:00:00Z")
+
+    val samples = List(7) { index ->
+        Chapter(
+            id = "$index",
+            novelId = "",
+            part = "Livro 4",
+            title = "O Despertar $index",
+            chapterNumber = "${index + 1}",
+            createdAt = mockDate,
+        )
+    }
+
     val sample = Chapter(
         id = "1",
         part = "Livro 4",
         title = "Yunque Zi",
         chapterNumber = "391",
+        createdAt = mockDate,
+        novelId = "",
         content = "“Du Tian!”\n" +
                 "\n" +
                 "Essas palavras entraram nos ouvidos de Wang Lin e fez seus olhos ficarem sérios. Contudo, ele não tinha tempo de pensar sobre isso no momento, então ele se concentrou exclusivamente no crescimento da energia espiritual dentro do seu corpo.\n" +

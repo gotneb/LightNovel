@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,15 +21,20 @@ import androidx.navigation.compose.rememberNavController
 import gb.coding.lightnovel.core.navigation.Route
 import gb.coding.lightnovel.core.navigation.bottomNavItems
 import gb.coding.lightnovel.core.navigation.components.BottomNavigationBar
-import gb.coding.lightnovel.reader.data.mock.MockChapters
-import gb.coding.lightnovel.reader.data.mock.MockNovels
+import gb.coding.lightnovel.reader.presentation.browse.BrowseEvent
 import gb.coding.lightnovel.reader.presentation.browse.BrowseScreen
-import gb.coding.lightnovel.reader.presentation.browse.BrowseState
+import gb.coding.lightnovel.reader.presentation.browse.BrowseViewModel
+import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderEvent
 import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderScreen
+import gb.coding.lightnovel.reader.presentation.chapter_reader.ChapterReaderViewModel
+import gb.coding.lightnovel.reader.presentation.library.LibraryEvent
 import gb.coding.lightnovel.reader.presentation.library.LibraryScreen
-import gb.coding.lightnovel.reader.presentation.library.LibraryState
+import gb.coding.lightnovel.reader.presentation.library.LibraryViewModel
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailEvent
 import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailScreen
+import gb.coding.lightnovel.reader.presentation.novel_detail.NovelDetailViewModel
 import gb.coding.lightnovel.ui.theme.LightNovelTheme
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +62,26 @@ class MainActivity : ComponentActivity() {
                     }
                     if (currentIndex >= 0) {
                         selectedNavigationIndex = currentIndex
+                    }
+                }
+
+                val browseViewModel = koinViewModel<BrowseViewModel>()
+                val browseState by browseViewModel.state.collectAsStateWithLifecycle()
+
+                /*
+                 * TODO: Optimize loading novels from local database.
+                 *  When loading the app there's small delay before the novels are loaded, so it shows for a brief moment, an empty state screen.
+                 *  There must be a way where the splash screen only goes out when the novels are loaded.
+                 */
+                val libraryViewModel = koinViewModel<LibraryViewModel>()
+
+                LaunchedEffect(Unit) {
+                    browseViewModel.events.collect { event ->
+                        when (event) {
+                            is BrowseEvent.Navigate2NovelDetail -> {
+                                navController.navigate(Route.NovelDetail(event.novelId))
+                            }
+                        }
                     }
                 }
 
@@ -89,37 +115,76 @@ class MainActivity : ComponentActivity() {
                         startDestination = Route.Library,
                     ) {
                         composable<Route.Library> {
+                            println("LibraryScreen | Composable")
+                            val state by libraryViewModel.state.collectAsStateWithLifecycle()
+
+                            LaunchedEffect(Unit) {
+                                libraryViewModel.events.collect { event ->
+                                    when (event) {
+                                        is LibraryEvent.Navigate2NovelDetail -> {
+                                            navController.navigate(Route.NovelDetail(event.novelId))
+                                        }
+                                    }
+                                }
+                            }
+
                             LibraryScreen(
-                                state = LibraryState(),
-                                onAction = {
-                                    navController.navigate(Route.NovelDetail)
-                                },
+                                state = state,
+                                onAction = libraryViewModel::onAction,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(innerPadding)
                             )
                         }
+
                         composable<Route.Browse> {
                             BrowseScreen(
-                                state = BrowseState(),
-                                onAction = {
-                                    navController.navigate(Route.NovelDetail)
-                                },
+                                state = browseState,
+                                onAction = browseViewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }
+
                         composable<Route.NovelDetail> {
+                            println("NovelDetailScreen | Composable")
+                            val viewModel = koinViewModel<NovelDetailViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+
                             NovelDetailScreen(
-                                novel = MockNovels.sample,
-                                onAction = { chapter ->
-                                    navController.navigate(Route.ChapterReader)
-                                },
+                                state = state,
+                                onAction = viewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
+
+                            LaunchedEffect(Unit) {
+                                viewModel.events.collect { event ->
+                                    println("NovelDetailScreen | LaunchedEffect | event: $event")
+                                    when (event) {
+                                        is NovelDetailEvent.Navigate2ChapterReader -> {
+                                            navController.navigate(Route.ChapterReader(event.chapterId))
+                                        }
+                                    }
+                                }
+                            }
                         }
+
                         composable<Route.ChapterReader> {
+                            val viewModel = koinViewModel<ChapterReaderViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+
+                            LaunchedEffect(Unit) {
+                                viewModel.events.collect { event ->
+                                    when (event) {
+                                        ChapterReaderEvent.NavigateBack -> {
+                                            navController.popBackStack()
+                                        }
+                                    }
+                                }
+                            }
+
                             ChapterReaderScreen(
-                                chapter = MockChapters.sample,
+                                state = state,
+                                onAction = viewModel::onAction,
                                 modifier = Modifier.padding(innerPadding),
                             )
                         }
