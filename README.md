@@ -1,24 +1,56 @@
-# Light Novel Reader 📖
+# Light Novel Reader (WIP) 
 
-<details>
-<summary>⚠️ Branch Notice (Click to expand)</summary>
+An open-source Android app for reading and managing light novels.
 
-**This is the `master` branch.**  
-For the latest features and active development, **please switch to the [`dev`](https://github.com/your-repo/tree/dev) branch**.
+This app is being developed using **Kotlin**, **Jetpack Compose**, and follows **MVI architecture** with clean principles.
 
-</details>
+> Project still under development  
 
-This is a personal light novel reading app built using Kotlin and Jetpack Compose.  
-It's under early development and currently has limited features.
+## Features (Current MVP)
 
-### 🔄 Latest Updates
+- Language support (`en`, `pt-BR`, `ja`, `de`)
+- Highlight individual words in chapter text based on learning progress
+- Add an image for a specific word while reading
 
-To follow progress, explore the [`dev`](https://github.com/gotneb/LightNovel/tree/dev) branch.
+## Disclaimer
 
----
+The developer of this application does not have any affiliation with the content providers available.
 
-### ✨ Motivation
+## Screenshots :camera:
 
-> I believe one of the most effective ways to learn a new language is through reading. This app was originally built for my personal use to help with that process. It’s designed to make reading more interactive and educational by allowing you to highlight vocabulary, save words along with their meanings, and even attach images when needed to aid memorization.
->
-> Since I enjoy reading light novels, the app currently supports four languages out of the box, making it easy to switch between them while reading and learning. While it was created for personal use, you're welcome to adapt or extend it to fit > your own learning journey.
+| Views       | Dark                                                                 | Light                                                                 |
+| ----------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Library     | <img src="screenshots/home-dark.jpeg" height="500">                  | <img src="screenshots/home-light.jpeg" height="500">                  |
+| Book        | <img src="screenshots/novel-dark.jpeg" height="500">                 | <img src="screenshots/novel-light.jpeg" height="500">                 |
+| Reader      | <img src="screenshots/reading-dark.jpeg" height="500">               | <img src="screenshots/reading-light.jpeg" height="500">               |
+| Save words  | <img src="screenshots/save-word-dark.jpeg" height="500">             | <img src="screenshots/save-word-light.jpeg" height="500">             |
+
+
+## Tech Stack
+
+| Layer       | Technology             |
+|-------------|-------------------------|
+| UI          | Jetpack Compose         |
+| State       | Kotlin Flows + MVI      |
+| Local DB    | Room                    |
+| Networking  | Kotlinx Serialization   |
+| DI          | Koin                    |
+| Architecture| Clean (Domain/Data/UI)  |
+
+## Getting Started
+
+1. Clone the repo
+2. Open in Android Studio
+3. Create a `local.properties` file in the project root and add your Supabase keys:
+   
+   - `SUPABASE_URL=https://your-project.supabase.co`
+   - `SUPABASE_ANON_KEY=your-anon-key`
+5. Run on an emulator or device
+
+## Note
+
+This is a personal/experimental project. Contributions are welcome, but the codebase is evolving quickly.
+
+## License
+
+Licensed under the [MIT License](./LICENSE).
