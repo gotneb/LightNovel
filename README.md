@@ -9,13 +9,25 @@ This app is being developed using **Kotlin**, **Jetpack Compose**, and follows *
 
 ## Features (Current MVP)
 
-- ✅ Browse novel details (title, author, cover, description)
-- ✅ View chapters list and open chapter reader
-- ✅ Add/remove novels to/from **library bookmarks**
-- ✅ Persist bookmarks locally using **Room**
-- ✅ Fetch content dynamically from custom API
-- ✅ Language support (`en`, `pt-BR`, `ja`, `de`)
-- ✅ Highlight individual words in chapter text based on learning progress
+- Browse novel details (title, author, cover, description)
+- View chapters list and open chapter reader
+- Add/remove novels to/from **library bookmarks**
+- Persist bookmarks locally using **Room**
+- Fetch content dynamically from custom API
+- Language support (`en`, `pt-BR`, `ja`, `de`)
+- Highlight individual words in chapter text based on learning progress
+
+## Disclaimer
+
+The developer of this application does not have any affiliation with the content providers available.
+
+## Screenshots :camera:
+
+| Views    | Dark                                                       | Light                                                        |
+| -------- | ---------------------------------------------------------- | ------------------------------------------------------------ |
+| Library  | ![library_view_dark](screenshots/home-dark.jpeg)           | ![library_view_light](screenshots/home-light.jpeg)           |
+| Book     | ![book_view_dark](screenshots/novel-dark.jpeg)             | ![book_view_light](screenshots/novel-light.jpeg)             |
+| Reader   | ![book_view_dark](screenshots/reading-dark.jpeg)           | ![book_view_light](screenshots/reading-light.jpeg)           |
 
 ## Tech Stack
 
