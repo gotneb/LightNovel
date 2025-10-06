@@ -4,18 +4,13 @@ An open-source Android app for reading and managing light novels.
 
 This app is being developed using **Kotlin**, **Jetpack Compose**, and follows **MVI architecture** with clean principles.
 
-> Status: Actively under development  
-> MVP Focus: Online-first reading experience and bookmarking
+> Project still under development  
 
 ## Features (Current MVP)
 
-- Browse novel details (title, author, cover, description)
-- View chapters list and open chapter reader
-- Add/remove novels to/from **library bookmarks**
-- Persist bookmarks locally using **Room**
-- Fetch content dynamically from custom API
 - Language support (`en`, `pt-BR`, `ja`, `de`)
 - Highlight individual words in chapter text based on learning progress
+- Add an image for a specific word while reading
 
 ## Disclaimer
 
@@ -23,11 +18,13 @@ The developer of this application does not have any affiliation with the content
 
 ## Screenshots :camera:
 
-| Views    | Dark                                                       | Light                                                        |
-| -------- | ---------------------------------------------------------- | ------------------------------------------------------------ |
-| Library  | ![library_view_dark](screenshots/home-dark.jpeg)           | ![library_view_light](screenshots/home-light.jpeg)           |
-| Book     | ![book_view_dark](screenshots/novel-dark.jpeg)             | ![book_view_light](screenshots/novel-light.jpeg)             |
-| Reader   | ![book_view_dark](screenshots/reading-dark.jpeg)           | ![book_view_light](screenshots/reading-light.jpeg)           |
+| Views       | Dark                                                                 | Light                                                                 |
+| ----------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Library     | <img src="screenshots/home-dark.jpeg" height="500">                  | <img src="screenshots/home-light.jpeg" height="500">                  |
+| Book        | <img src="screenshots/novel-dark.jpeg" height="500">                 | <img src="screenshots/novel-light.jpeg" height="500">                 |
+| Reader      | <img src="screenshots/reading-dark.jpeg" height="500">               | <img src="screenshots/reading-light.jpeg" height="500">               |
+| Save words  | <img src="screenshots/save-word-dark.jpeg" height="500">             | <img src="screenshots/save-word-light.jpeg" height="500">             |
+
 
 ## Tech Stack
 
