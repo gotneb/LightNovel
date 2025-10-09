@@ -1,14 +1,22 @@
-# Light Novel Reader (WIP) 
+> [!WARNING]
+> This is a work in progress! For updates on the ongoing development, follow me on [Twitter](https://x.com/Gabriel36509504), or watch the repository.
+
+# Light Novel Reader
 
 An open-source Android app for reading and managing light novels.
 
 This app is being developed using **Kotlin**, **Jetpack Compose**, and follows **MVI architecture** with clean principles.
 
-> Project still under development  
+Reasons why I am building it:
+
+- Because I think reading is a powerful to acquire language
+- I wanna to dive into the Android internals
+- Well, mostly learn tbh
+
 
 ## Features (Current MVP)
 
-- Language support (`en`, `pt-BR`, `ja`, `de`)
+- Language support (`en`, `pt-BR`, `de`)
 - Highlight individual words in chapter text based on learning progress
 - Add an image for a specific word while reading
 
