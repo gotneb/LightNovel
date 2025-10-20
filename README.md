@@ -1,5 +1,5 @@
 > [!WARNING]
-> This is a work in progress! For updates on the ongoing development, follow me on [Twitter](https://x.com/Gabriel36509504), or watch the repository.
+> This is a work in progress! For updates on the ongoing development, watch the repository.
 
 # Light Novel Reader
 
